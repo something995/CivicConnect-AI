@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About — CivicConnect AI</title>
+    <meta name="description"
+        content="Learn about CivicConnect AI — an AI-powered civic complaint assistant that bridges citizens and authorities for smarter communities.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="civic">CIVIC</span><span class="connect">CONNECT</span><span class="ai">AI</span>
+            <span class="logo-dot"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('track') }}">Track</a></li>
+            <li><a href="{{ url_for('about') }}" class="active">About</a></li>
+            <li><a href="{{ url_for('admin_login') }}" style="color: #f59e0b;">🏛️ GHMC</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <div class="result-header">
+        <div class="container">
+            <h1>About <span class="gradient-text">CivicConnect AI</span></h1>
+            <p>An AI-powered platform for smarter civic issue reporting</p>
+        </div>
+    </div>
+
+    <!-- About Content -->
+    <section class="section" style="padding-top: 0;">
+        <div class="container about-content">
+
+            <div class="glass-card" style="margin-bottom: 24px;">
+                <h3>🎯 What is CivicConnect AI?</h3>
+                <p>
+                    CivicConnect AI is an intelligent civic complaint assistant that uses machine learning to help
+                    citizens report issues like potholes, garbage, sewage overflow, streetlight failures, and
+                    waterlogging. Our system analyzes your complaint — whether submitted as text or an image —
+                    and instantly identifies the problem type, suggests actionable solutions, and connects you
+                    with the responsible government authority in your area.
+                </p>
+            </div>
+
+            <div class="glass-card" style="margin-bottom: 24px;">
+                <h3>🤖 How the AI Works</h3>
+                <p>
+                    We use a <strong>dual-model approach</strong> for maximum accuracy:
+                </p>
+                <p>
+                    <strong>Text Classification:</strong> A TF-IDF + Linear SVM pipeline trained on 1,000+
+                    synthetic civic complaint texts. It understands natural language descriptions of civic issues
+                    and classifies them into categories.
+                </p>
+                <p>
+                    <strong>Image Classification:</strong> A YOLOv8 classification model fine-tuned on labeled
+                    images of civic problems. When you upload a photo, the model visually identifies the issue type
+                    with a confidence score.
+                </p>
+                <p>
+                    When both text and image are provided, the image classification takes priority as it tends
+                    to be more reliable for visual issues.
+                </p>
+            </div>
+
+            <div class="glass-card" style="margin-bottom: 24px;">
+                <h3>📋 Issue Categories</h3>
+                <p>The system currently supports the following civic issue types:</p>
+                <div class="tech-tags" style="margin-top: 16px;">
+                    <span class="tech-tag">🕳️ Pothole / Road Damage</span>
+                    <span class="tech-tag">🗑️ Garbage / Solid Waste</span>
+                    <span class="tech-tag">🚰 Sewage Overflow</span>
+                    <span class="tech-tag">💡 Streetlight / Electricity</span>
+                    <span class="tech-tag">🌊 Waterlogging / Flooding</span>
+                    <span class="tech-tag">📋 Other Civic Issues</span>
+                </div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom: 24px;">
+                <h3>🛠️ Technology Stack</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Flask</span>
+                    <span class="tech-tag">scikit-learn</span>
+                    <span class="tech-tag">YOLOv8</span>
+                    <span class="tech-tag">Pandas</span>
+                    <span class="tech-tag">PyTorch</span>
+                    <span class="tech-tag">HTML / CSS / JS</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; padding: 40px 0 20px;">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    📝 Report an Issue Now
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">CivicConnect <span style="color: var(--accent-blue);">AI</span></div>
+                <div class="footer-text">© 2025 CivicConnect AI. Built for smarter communities.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 30);
+        });
+    </script>
+</body>
+
+</html>

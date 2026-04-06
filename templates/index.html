@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CivicConnect AI — Smart Civic Issue Reporting</title>
+    <meta name="description"
+        content="CivicConnect AI bridges citizens and authorities with AI-powered civic complaint analysis, smart issue classification, and instant authority routing.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}" id="flash-{{ loop.index }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="civic">CIVIC</span><span class="connect">CONNECT</span><span class="ai">AI</span>
+            <span class="logo-dot"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('track') }}">Track</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('admin_login') }}" style="color: #f59e0b;">🏛️ GHMC</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                AI-Powered Civic Intelligence
+            </div>
+            <h1>
+                Report Issues.<br>
+                Get <span class="gradient-text">Smart Solutions.</span>
+            </h1>
+            <p>
+                Describe your civic complaint or upload an image — our AI instantly classifies
+                the issue, suggests solutions, and connects you with the right authority.
+            </p>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value">5+</div>
+                    <div class="stat-label">Issue Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">AI</div>
+                    <div class="stat-label">Text & Image</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Always Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complaint Form -->
+    <section class="section">
+        <div class="container">
+            <form action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data"
+                class="glass-card form-card" id="complaint-form">
+
+                <h2><span class="icon">📝</span> Report a Civic Issue</h2>
+                <p class="form-subtitle">Fill in the details below and let our AI analyze your complaint</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="e.g. Hyderabad" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Area / Locality</label>
+                        <input type="text" id="area" name="area" placeholder="e.g. Kukatpally" required>
+                    </div>
+                </div>
+
+                <!-- GPS Location -->
+                <div class="form-group">
+                    <label>📍 GPS Location (Optional)</label>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" id="gpsDetectBtn" onclick="detectGPS()" style="
+                            padding: 10px 18px;
+                            border-radius: var(--radius-md);
+                            border: 1px dashed rgba(6, 182, 212, 0.3);
+                            background: rgba(6, 182, 212, 0.06);
+                            color: #06b6d4;
+                            font-family: inherit;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 6px;
+                        ">📡 Detect My Location</button>
+                        <span id="gpsResult" style="font-size: 0.82rem; color: var(--text-muted);">Not captured</span>
+                    </div>
+                    <input type="hidden" name="gps_lat" id="gps_lat">
+                    <input type="hidden" name="gps_lng" id="gps_lng">
+                </div>
+
+                <div class="form-group">
+                    <label for="complaint_text">Describe the Problem</label>
+                    <textarea id="complaint_text" name="complaint_text" rows="4"
+                        placeholder="Example: There is a large pothole near the bus stop on main road. Vehicles are slipping and it's dangerous for pedestrians."
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Image (Optional)</label>
+                    <div class="file-upload-wrapper" id="file-upload-wrapper">
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <div class="file-upload-icon">📷</div>
+                        <div class="file-upload-text">
+                            <strong>Click to upload</strong> or drag and drop
+                        </div>
+                        <div class="file-upload-hint">PNG, JPG, JPEG up to 10MB</div>
+                    </div>
+                    <div class="image-preview" id="image-preview">
+                        <img id="preview-img" src="" alt="Preview">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+                    <span class="btn-text">🔍 Analyze Complaint</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Three simple steps to get your civic issue resolved</p>
+
+            <div class="features-grid">
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon">📝</div>
+                    <h3>Describe or Upload</h3>
+                    <p>Type your complaint in natural language or upload a photo of the issue for faster classification.
+                    </p>
+                </div>
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Classification</h3>
+                    <p>Our dual AI models (text + image) instantly detect the issue type — potholes, garbage, sewage,
+                        and more.</p>
+                </div>
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon">📞</div>
+                    <h3>Get Connected</h3>
+                    <p>Receive step-by-step solution advice and direct contact details of the responsible authority in
+                        your area.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">CivicConnect <span style="color: var(--accent-blue);">AI</span></div>
+                <div class="footer-text">Empowering Civic Intelligence — Bridging Citizens & Authorities</div>
+                <div class="footer-links">
+                    <a href="{{ url_for('index') }}">Home</a>
+                    <a href="{{ url_for('about') }}">About</a>
+                </div>
+                <div class="footer-text">© 2025 CivicConnect AI. Built for smarter communities.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Navbar scroll effect ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 30);
+        });
+
+        // --- Image preview ---
+        const fileInput = document.getElementById('image');
+        const previewContainer = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const uploadWrapper = document.getElementById('file-upload-wrapper');
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    previewImg.src = ev.target.result;
+                    previewContainer.classList.add('active');
+                    uploadWrapper.classList.add('has-file');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.classList.remove('active');
+                uploadWrapper.classList.remove('has-file');
+            }
+        });
+
+        // --- Form submit loading state ---
+        const form = document.getElementById('complaint-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', () => {
+            submitBtn.classList.add('loading');
+        });
+
+        // --- Scroll reveal ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- Auto‐dismiss flash messages ---
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+
+        // --- GPS Detection ---
+        function detectGPS() {
+            const btn = document.getElementById('gpsDetectBtn');
+            const result = document.getElementById('gpsResult');
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Acquiring...';
+            result.textContent = 'Getting location...';
+            result.style.color = '#f59e0b';
+
+            if (!navigator.geolocation) {
+                result.textContent = 'GPS not supported in this browser';
+                result.style.color = '#ef4444';
+                btn.disabled = false;
+                btn.innerHTML = '📡 Detect My Location';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+
+                    document.getElementById('gps_lat').value = lat;
+                    document.getElementById('gps_lng').value = lng;
+
+                    result.innerHTML = `✅ ${lat.toFixed(5)}, ${lng.toFixed(5)} (±${Math.round(pos.coords.accuracy)}m)`;
+                    result.style.color = '#10b981';
+                    btn.innerHTML = '✅ Location Captured';
+                    btn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                    btn.style.color = '#10b981';
+
+                    // Try to auto-fill city & area
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.address) {
+                                const cityField = document.getElementById('city');
+                                const areaField = document.getElementById('area');
+                                if (!cityField.value) {
+                                    cityField.value = data.address.city || data.address.town || data.address.county || '';
+                                }
+                                if (!areaField.value) {
+                                    areaField.value = data.address.suburb || data.address.neighbourhood || data.address.road || '';
+                                }
+                            }
+                        })
+                        .catch(() => {});
+                },
+                (err) => {
+                    let msg = 'Could not get location.';
+                    if (err.code === 1) msg = 'Permission denied. Enable location in browser settings.';
+                    else if (err.code === 2) msg = 'Location unavailable.';
+                    else if (err.code === 3) msg = 'Timed out. Try again.';
+
+                    result.textContent = msg;
+                    result.style.color = '#ef4444';
+                    btn.disabled = false;
+                    btn.innerHTML = '📡 Retry GPS';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+    </script>
+</body>
+
+</html>

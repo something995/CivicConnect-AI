@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analysis Result — CivicConnect AI</title>
+    <meta name="description" content="AI analysis results for your civic complaint.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="civic">CIVIC</span><span class="connect">CONNECT</span><span class="ai">AI</span>
+            <span class="logo-dot"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('track') }}">Track</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('admin_login') }}" style="color: #f59e0b;">🏛️ GHMC</a></li>
+        </ul>
+    </nav>
+
+    <!-- Result Header -->
+    <div class="result-header">
+        <div class="container">
+            <h1>Analysis <span class="gradient-text">Complete</span></h1>
+            <p>Here's what our AI found about your complaint</p>
+            <div class="complaint-id-badge">📋 Report ID: <strong>{{ complaint_id }}</strong></div>
+            <div class="issue-badge">{{ issue_type }}</div>
+            <div class="severity-badge severity-{{ severity.level }}"
+                style="border-color: {{ severity_color }}40; background: {{ severity_color }}15;">
+                <span class="severity-dot" style="background: {{ severity_color }};"></span>
+                <span style="color: {{ severity_color }}; font-weight: 700; text-transform: uppercase;">{{
+                    severity.level }}</span>
+                <span style="color: var(--text-muted);">Priority</span>
+                <span style="color: {{ severity_color }}; font-weight: 700;">{{ severity.score }}/100</span>
+            </div>
+            {% if forwarding and forwarding.action_level %}
+            <div
+                style="margin-top: 10px; padding: 8px 18px; border-radius: var(--radius-md); background: {{ severity_color }}10; border: 1px solid {{ severity_color }}30; display: inline-flex; align-items: center; gap: 8px;">
+                <span>{{ forwarding.action_level.emoji }}</span>
+                <span style="color: {{ severity_color }}; font-weight: 600; font-size: 0.85rem;">{{
+                    forwarding.action_level.level }} — {{ forwarding.action_level.label }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+            <div class="results-grid">
+
+                <!-- Community Watch -->
+                {% if duplicates and duplicates|length > 0 %}
+                <div class="glass-card result-card duplicate-alert-card">
+                    <h3><span class="card-icon icon-amber">👥</span> Community Watch</h3>
+                    <div class="duplicate-alert-banner">
+                        <div class="dup-count">{{ duplicates|length }}</div>
+                        <div>
+                            <strong>{{ duplicates|length }} neighbor{{ 's' if duplicates|length > 1 else '' }} tracking
+                                this with you</strong>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+                                Your voice adds to the community priority — more reports mean faster action
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="duplicate-list">
+                        {% for dup in duplicates %}
+                        <div class="duplicate-item">
+                            <div class="dup-item-header">
+                                <code>{{ dup.id }}</code>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    {% if dup.image_match %}
+                                    <span class="severity-pill"
+                                        style="background: rgba(139,92,246,0.15); color: #8b5cf6;">📷 IMAGE</span>
+                                    {% endif %}
+                                    <span class="severity-pill severity-{{ dup.severity }}">{{ dup.severity|upper
+                                        }}</span>
+                                    <span class="status-pill status-{{ dup.status }}">{{ dup.status|capitalize }}</span>
+                                </div>
+                            </div>
+                            <p class="dup-item-text">{{ dup.complaint_text }}</p>
+                            <div class="dup-item-meta">
+                                <span>📍 {{ dup.area }}</span>
+                                <span>📅 {{ dup.created_at }}</span>
+                                <span class="match-score"
+                                    style="color: {{ '#10b981' if dup.similarity_score >= 70 else '#f59e0b' }};">
+                                    {{ dup.similarity_score }}% match
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if duplicate_count > 0 %}
+                    <div class="community-impact">
+                        <strong>🏘️ Community Evidence Log:</strong>
+                        {{ duplicate_count + 1 }} citizen{{ 's' if duplicate_count > 0 else '' }}
+                        (including you) have reported this issue in {{ area }}.
+                        This collective evidence strengthens your case for priority resolution.
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Severity Assessment -->
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-rose">⚡</span> Severity Assessment</h3>
+                    <div class="severity-meter">
+                        <div class="severity-meter-track">
+                            <div class="severity-meter-fill"
+                                style="width: {{ severity.score }}%; background: {{ severity_color }};" id="sev-bar">
+                            </div>
+                        </div>
+                        <div class="severity-meter-labels">
+                            <span>Low</span><span>Medium</span><span>High</span><span>Critical</span>
+                        </div>
+                    </div>
+                    <div class="severity-reasons">
+                        {% for reason in severity.reasons %}
+                        <div class="severity-reason-item">
+                            <span class="severity-reason-dot" style="background: {{ severity_color }};"></span>
+                            {{ reason }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Your Complaint -->
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-blue">📋</span> Your Complaint</h3>
+                    <p style="color: var(--text-primary); font-size: 1rem; line-height: 1.8;">"{{ complaint_text }}"</p>
+                    {% if city and area %}
+                    <p style="margin-top: 12px;"><strong>📍 Location:</strong> {{ area }}, {{ city }}</p>
+                    {% endif %}
+                    {% if saved_image_url %}
+                    <div class="uploaded-image"><img src="{{ saved_image_url }}" alt="Uploaded image"></div>
+                    {% endif %}
+                </div>
+
+                <!-- AI Classification -->
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-purple">🤖</span> AI Classification</h3>
+                    <p><strong>Detected Issue:</strong> {{ issue_type }}</p>
+                    {% if image_label and image_confidence %}
+                    <div
+                        style="margin-top: 16px; padding: 16px; background: rgba(139,92,246,0.06); border-radius: var(--radius-md); border: 1px solid rgba(139,92,246,0.15);">
+                        <p style="margin-bottom: 8px;"><strong>📷 Image Analysis</strong></p>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ image_confidence }}%;" id="conf-bar"></div>
+                        </div>
+                        <p class="confidence-text">Confidence: <strong style="color: var(--accent-blue);">{{
+                                image_confidence }}%</strong></p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                            Image severity factored into priority score
+                        </p>
+                    </div>
+                    {% else %}
+                    <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">
+                        Classification based on text analysis using TF-IDF + SVM model.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Solution -->
+                {% if solution %}
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-emerald">💡</span> {{ solution.title }}</h3>
+                    <div class="steps-label">🙋 Steps You (Citizen) Can Take</div>
+                    <ul class="steps-list steps-citizen">
+                        {% for step in solution.citizen_steps %}
+                        {% if step.strip() %}<li>{{ step }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                    <div class="steps-label" style="margin-top: 24px;">🏛️ Steps the Authority Should Take</div>
+                    <ul class="steps-list steps-authority">
+                        {% for step in solution.authority_steps %}
+                        {% if step.strip() %}<li>{{ step }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Authority -->
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-amber">📞</span> Responsible Authority</h3>
+                    {% if authority %}
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <div class="label">Department</div>
+                            <div class="value">{{ authority.department_name }}</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="label">City / Area</div>
+                            <div class="value">{{ authority.city }} — {{ authority.area }}</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="label">Phone</div>
+                            <div class="value">📞 {{ authority.phone }}</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="label">Email</div>
+                            <div class="value">✉️ {{ authority.email }}</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div
+                        style="padding: 20px; background: rgba(245,158,11,0.06); border-radius: var(--radius-md); border: 1px solid rgba(245,158,11,0.15);">
+                        <p style="color: var(--accent-amber);">⚠️ No matching authority found for <strong>{{ area }}, {{
+                                city }}</strong>.</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Try a different area
+                            name or use the GHMC channels below.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- GHMC Forwarding — Official Report -->
+                <div class="glass-card result-card">
+                    <h3><span class="card-icon icon-emerald">🏛️</span> Forward to GHMC</h3>
+
+                    <!-- Ward & Zone Info -->
+                    {% if forwarding.ward_info %}
+                    <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <div
+                            style="padding: 8px 16px; border-radius: var(--radius-md); background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">WARD</span>
+                            <strong style="color: #818cf8;">{{ forwarding.ward_info.ward }}</strong>
+                        </div>
+                        <div
+                            style="padding: 8px 16px; border-radius: var(--radius-md); background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">ZONE</span>
+                            <strong style="color: #818cf8;">{{ forwarding.ward_info.zone }}</strong>
+                        </div>
+                        <div
+                            style="padding: 8px 16px; border-radius: var(--radius-md); background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">ACTION
+                                LEVEL</span>
+                            <strong style="color: #818cf8;">{{ forwarding.action_level.emoji }} {{
+                                forwarding.action_level.label }}</strong>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                        Your complaint has been formatted as an official CIVIC-MONITOR report.
+                        Each channel sends a unique, human-written message.
+                    </p>
+
+                    <div class="forwarding-grid">
+                        <!-- WhatsApp (primary) -->
+                        <a href="{{ forwarding.whatsapp_link }}" target="_blank" class="forward-btn forward-whatsapp">
+                            <span class="forward-icon">💬</span>
+                            <div>
+                                <strong>WhatsApp to GHMC</strong>
+                                <span>Official report — one tap to send</span>
+                            </div>
+                        </a>
+
+                        <!-- One-Click Copy -->
+                        <button onclick="copyComplaint()" class="forward-btn forward-copy" id="copy-btn">
+                            <span class="forward-icon">📋</span>
+                            <div>
+                                <strong id="copy-label">Copy Report Text</strong>
+                                <span>Paste into WhatsApp, SMS, or any app</span>
+                            </div>
+                        </button>
+
+                        <!-- Email -->
+                        {% if forwarding.email_link %}
+                        <a href="{{ forwarding.email_link }}" target="_blank" class="forward-btn forward-email"
+                            onclick="markEmailed('{{ complaint_id }}')">
+                            <span class="forward-icon">📧</span>
+                            <div>
+                                <strong>Email to Department</strong>
+                                <span>Official report to {{ authority.email if authority else 'authority' }}</span>
+                            </div>
+                        </a>
+                        {% endif %}
+
+                        <!-- SMS -->
+                        <a href="{{ forwarding.sms_link }}" class="forward-btn forward-call">
+                            <span class="forward-icon">💬</span>
+                            <div>
+                                <strong>SMS to GHMC</strong>
+                                <span>Text complaint to helpline</span>
+                            </div>
+                        </a>
+
+                        <!-- Call -->
+                        <a href="tel:{{ forwarding.ghmc_helpline }}" class="forward-btn forward-call">
+                            <span class="forward-icon">📞</span>
+                            <div>
+                                <strong>Call GHMC Helpline</strong>
+                                <span>{{ forwarding.ghmc_helpline }}</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- WhatsApp Pro Tip -->
+                    <div
+                        style="margin-top: 16px; padding: 14px 18px; background: rgba(37,211,102,0.06); border: 1px solid rgba(37,211,102,0.15); border-radius: var(--radius-md);">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+                            <strong style="color: #25d366;">💡 Pro Tip:</strong>
+                            Your message includes Report ID <code
+                                style="color: var(--accent-amber);">{{ complaint_id }}</code>,
+                            Ward info, and AI analysis. Officials can scan it in 2 seconds.
+                            {% if saved_image_url %}
+                            <br>📷 Attach your uploaded photo from gallery for maximum impact!
+                            {% endif %}
+                            Follow up in 48 hours: <em>"I sent Report {{ complaint_id }} on {{ "now"|string }}"</em>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div
+                    style="text-align: center; padding: 20px 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">📝 Report Another Issue</a>
+                    <a href="{{ url_for('track') }}" class="btn btn-secondary">🔍 Track Complaint</a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">📊 View Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hidden copy text -->
+    <textarea id="copy-text" style="position:absolute;left:-9999px;">{{ forwarding.copy_text }}</textarea>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">CivicConnect <span style="color: var(--accent-blue);">AI</span></div>
+                <div class="footer-text">© 2025 CivicConnect AI. Built for smarter communities.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+
+        ['conf-bar', 'sev-bar'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const w = el.style.width;
+                el.style.width = '0%';
+                setTimeout(() => el.style.width = w, 300);
+            }
+        });
+
+        function markEmailed(id) {
+            fetch('/email-sent/' + id).catch(() => { });
+        }
+
+        function copyComplaint() {
+            const text = document.getElementById('copy-text').value;
+            navigator.clipboard.writeText(text).then(() => {
+                const label = document.getElementById('copy-label');
+                label.textContent = '✅ Copied!';
+                document.getElementById('copy-btn').style.borderColor = 'rgba(16,185,129,0.4)';
+                setTimeout(() => {
+                    label.textContent = 'Copy Complaint Text';
+                    document.getElementById('copy-btn').style.borderColor = '';
+                }, 2500);
+            }).catch(() => {
+                // Fallback for older browsers
+                const ta = document.getElementById('copy-text');
+                ta.style.left = '0';
+                ta.select();
+                document.execCommand('copy');
+                ta.style.left = '-9999px';
+            });
+        }
+    </script>
+</body>
+
+</html>

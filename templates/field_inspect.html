@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Field Inspection — GHMC CivicConnect AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .inspect-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 30px;
+            background: rgba(10, 10, 20, 0.95);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .inspect-nav .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .inspect-nav .nav-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(6, 182, 212, 0.12);
+            color: #06b6d4;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .inspect-nav h2 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .inspect-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .inspect-container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .inspect-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .inspect-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .inspect-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* GPS Section */
+        .gps-section {
+            margin-bottom: 24px;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            background: rgba(6, 182, 212, 0.04);
+            border: 1px solid rgba(6, 182, 212, 0.15);
+        }
+
+        .gps-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .gps-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gps-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .gps-status.waiting {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .gps-status.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .gps-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .gps-status .pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        .gps-coords {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .gps-coord-box {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+        }
+
+        .gps-coord-box .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .gps-coord-box .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .gps-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(6, 182, 212, 0.3);
+            background: rgba(6, 182, 212, 0.06);
+            color: #06b6d4;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .gps-btn:hover {
+            background: rgba(6, 182, 212, 0.12);
+            border-color: rgba(6, 182, 212, 0.5);
+        }
+
+        .gps-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Camera Section */
+        .camera-section {
+            margin-bottom: 24px;
+        }
+
+        .camera-preview {
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .camera-placeholder .icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .camera-controls button {
+            flex: 1;
+        }
+
+        .capture-btn {
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: var(--gradient-primary);
+            color: #fff;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .capture-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .retake-btn {
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .retake-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Address bar */
+        .address-bar {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .address-bar input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .upload-fallback {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .upload-fallback label {
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .upload-fallback label:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .inspect-container {
+                padding: 20px 16px 40px;
+            }
+
+            .gps-coords {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Nav -->
+    <nav class="inspect-nav">
+        <div class="nav-left">
+            <span class="nav-badge">🔍 Field Inspection</span>
+            <h2>GHMC <span style="color: #06b6d4;">Patrol Mode</span></h2>
+        </div>
+        <div class="nav-actions">
+            <span style="color: var(--text-muted);">{{ user.full_name }}</span>
+            <a href="{{ url_for('admin_inspections') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px;">📊 View Dashboard</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px;">🏛️ Command Center</a>
+        </div>
+    </nav>
+
+    <div class="inspect-container">
+        <div class="inspect-header">
+            <h1>📸 Log Field <span class="gradient-text">Inspection</span></h1>
+            <p>Capture a photo and your GPS location — AI will identify the issue automatically</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="inspectForm">
+            <!-- GPS Section -->
+            <div class="gps-section">
+                <div class="gps-header">
+                    <h3>📍 GPS Location</h3>
+                    <div class="gps-status waiting" id="gpsStatus">
+                        <span class="pulse" style="background: currentColor;"></span>
+                        <span id="gpsStatusText">Waiting...</span>
+                    </div>
+                </div>
+
+                <button type="button" class="gps-btn" id="gpsBtn" onclick="getLocation()">
+                    📡 Enable GPS & Get Location
+                </button>
+
+                <div class="gps-coords" id="gpsCoords" style="display: none;">
+                    <div class="gps-coord-box">
+                        <div class="label">Latitude</div>
+                        <div class="value" id="latDisplay">—</div>
+                    </div>
+                    <div class="gps-coord-box">
+                        <div class="label">Longitude</div>
+                        <div class="value" id="lngDisplay">—</div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="latitude" id="latInput">
+                <input type="hidden" name="longitude" id="lngInput">
+
+                <div class="address-bar" style="margin-top: 12px;">
+                    <span>🏠</span>
+                    <input type="text" name="address" id="addressInput"
+                        placeholder="Address / Landmark (auto-filled or type manually)">
+                </div>
+            </div>
+
+            <!-- Camera Section -->
+            <div class="camera-section">
+                <div class="form-group">
+                    <label>📷 Capture Issue Photo</label>
+                    <div class="camera-preview" id="cameraPreview">
+                        <div class="camera-placeholder" id="cameraPlaceholder">
+                            <div class="icon">📷</div>
+                            <div>Camera preview will appear here</div>
+                        </div>
+                        <video id="cameraFeed" autoplay playsinline style="display: none;"></video>
+                        <img id="capturedPhoto" style="display: none;" alt="Captured">
+                        <canvas id="captureCanvas" style="display: none;"></canvas>
+                    </div>
+
+                    <div class="camera-controls">
+                        <button type="button" class="capture-btn" id="startCameraBtn" onclick="startCamera()">
+                            📹 Start Camera
+                        </button>
+                        <button type="button" class="capture-btn" id="captureBtn" onclick="capturePhoto()"
+                            style="display: none;">
+                            📸 Capture Photo
+                        </button>
+                        <button type="button" class="retake-btn" id="retakeBtn" onclick="retakePhoto()"
+                            style="display: none;">
+                            🔄 Retake
+                        </button>
+                    </div>
+
+                    <div class="upload-fallback">
+                        Or <label for="fileUpload">upload from gallery</label>
+                        <input type="file" id="fileUpload" name="image" accept="image/*" capture="environment"
+                            style="display: none;" onchange="handleFileUpload(event)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="notes">📝 Additional Notes (Optional)</label>
+                <textarea id="notes" name="notes" rows="3"
+                    placeholder="Describe what you see — e.g. 'Large pothole near bus stop, approximately 2ft wide'"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+                <span class="btn-text">🔍 Analyze & Log Inspection</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        let stream = null;
+        let photoBlob = null;
+
+        // ── GPS ─────────────────────────────────────
+        function getLocation() {
+            const btn = document.getElementById('gpsBtn');
+            const status = document.getElementById('gpsStatus');
+            const statusText = document.getElementById('gpsStatusText');
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Getting location...';
+            status.className = 'gps-status waiting';
+            statusText.textContent = 'Acquiring...';
+
+            if (!navigator.geolocation) {
+                status.className = 'gps-status error';
+                statusText.textContent = 'GPS not supported';
+                btn.disabled = false;
+                btn.innerHTML = '📡 Enable GPS & Get Location';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+
+                    document.getElementById('latInput').value = lat;
+                    document.getElementById('lngInput').value = lng;
+                    document.getElementById('latDisplay').textContent = lat.toFixed(6);
+                    document.getElementById('lngDisplay').textContent = lng.toFixed(6);
+                    document.getElementById('gpsCoords').style.display = 'grid';
+
+                    status.className = 'gps-status active';
+                    statusText.textContent = `Locked (±${Math.round(pos.coords.accuracy)}m)`;
+                    btn.innerHTML = '✅ Location Captured';
+                    btn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                    btn.style.color = '#10b981';
+
+                    // Try reverse geocoding
+                    reverseGeocode(lat, lng);
+                },
+                (err) => {
+                    status.className = 'gps-status error';
+                    statusText.textContent = 'Failed';
+                    btn.disabled = false;
+                    btn.innerHTML = '📡 Retry GPS';
+
+                    let msg = 'Could not get location.';
+                    if (err.code === 1) msg = 'Location permission denied. Please enable in browser settings.';
+                    else if (err.code === 2) msg = 'Location unavailable. Check GPS settings.';
+                    else if (err.code === 3) msg = 'Location request timed out. Try again.';
+                    alert(msg);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+
+        function reverseGeocode(lat, lng) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.display_name) {
+                        document.getElementById('addressInput').value = data.display_name;
+                    }
+                })
+                .catch(() => { /* silently fail */ });
+        }
+
+        // ── Camera ──────────────────────────────────
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
+                });
+                const video = document.getElementById('cameraFeed');
+                video.srcObject = stream;
+                video.style.display = 'block';
+                document.getElementById('cameraPlaceholder').style.display = 'none';
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('captureBtn').style.display = 'flex';
+            } catch (err) {
+                alert('Camera access denied or unavailable. Use the "upload from gallery" option instead.');
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraFeed');
+            const canvas = document.getElementById('captureCanvas');
+            const img = document.getElementById('capturedPhoto');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            canvas.toBlob((blob) => {
+                photoBlob = blob;
+                img.src = URL.createObjectURL(blob);
+                img.style.display = 'block';
+                video.style.display = 'none';
+
+                // Create a file from the blob and set it on the file input
+                const dt = new DataTransfer();
+                dt.items.add(new File([blob], `inspection_${Date.now()}.jpg`, { type: 'image/jpeg' }));
+                document.getElementById('fileUpload').files = dt.files;
+
+                // Stop camera
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                    stream = null;
+                }
+
+                document.getElementById('captureBtn').style.display = 'none';
+                document.getElementById('retakeBtn').style.display = 'flex';
+            }, 'image/jpeg', 0.85);
+        }
+
+        function retakePhoto() {
+            document.getElementById('capturedPhoto').style.display = 'none';
+            document.getElementById('retakeBtn').style.display = 'none';
+            photoBlob = null;
+
+            // Clear file input
+            document.getElementById('fileUpload').value = '';
+
+            startCamera();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const img = document.getElementById('capturedPhoto');
+                img.src = URL.createObjectURL(file);
+                img.style.display = 'block';
+
+                document.getElementById('cameraFeed').style.display = 'none';
+                document.getElementById('cameraPlaceholder').style.display = 'none';
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('captureBtn').style.display = 'none';
+                document.getElementById('retakeBtn').style.display = 'flex';
+
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                    stream = null;
+                }
+            }
+        }
+
+        // ── Form Submit ─────────────────────────────
+        document.getElementById('inspectForm').addEventListener('submit', function (e) {
+            const fileInput = document.getElementById('fileUpload');
+            if (!fileInput.files.length) {
+                e.preventDefault();
+                alert('Please capture or upload a photo before submitting.');
+                return;
+            }
+            document.getElementById('submitBtn').classList.add('loading');
+        });
+
+        // Auto-get GPS on page load
+        getLocation();
+
+        // Flash message auto-dismiss
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GHMC Admin Login — CivicConnect AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            max-width: 440px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .login-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .login-footer a {
+            color: var(--accent-blue);
+        }
+
+        .demo-creds {
+            margin-top: 20px;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            background: rgba(99, 102, 241, 0.06);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .demo-creds strong {
+            color: #818cf8;
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="login-container">
+        <div class="glass-card login-card">
+            <h1 class="login-title">GHMC <span class="gradient-text">Command Center</span></h1>
+            <p class="login-subtitle">Access the civic monitoring dashboard for Hyderabad</p>
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+                    🏛️ Log In to Command Center
+                </button>
+            </form>
+
+            <div class="demo-creds">
+                <strong>Demo Credentials:</strong><br>
+                Supervisor: <code>supervisor</code> / <code>admin123</code><br>
+                Field Worker: <code>worker_kukatpally</code> / <code>field123</code>
+            </div>
+
+            <div class="login-footer">
+                <a href="{{ url_for('index') }}">← Back to CivicConnect AI</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+    </script>
+</body>
+
+</html>

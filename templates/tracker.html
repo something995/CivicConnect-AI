@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Track Complaint — CivicConnect AI</title>
+    <meta name="description" content="Track the status of your civic complaint using your unique Report ID.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="civic">CIVIC</span><span class="connect">CONNECT</span><span class="ai">AI</span>
+            <span class="logo-dot"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('track') }}" class="active">Track</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('admin_login') }}" style="color: #f59e0b;">🏛️ GHMC</a></li>
+        </ul>
+    </nav>
+
+    <div class="result-header">
+        <div class="container">
+            <h1>Track Your <span class="gradient-text">Report</span></h1>
+            <p>Enter your Report ID to check status, update progress, and escalate if needed</p>
+        </div>
+    </div>
+
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+
+            <!-- Search Form -->
+            <form method="post" class="glass-card form-card" style="max-width: 600px;">
+                <div class="form-group">
+                    <label for="complaint_id">Report ID</label>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" id="complaint_id" name="complaint_id" placeholder="e.g. HYD-VIGIL-1001"
+                            value="{{ search_id }}" required style="flex: 1;">
+                        <button type="submit" class="btn btn-primary">🔍 Search</button>
+                    </div>
+                </div>
+            </form>
+
+            {% if complaint %}
+            <!-- Complaint Details -->
+            <div class="glass-card result-card" style="max-width: 700px; margin: 24px auto;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">
+                        <span class="card-icon icon-blue">📋</span>
+                        {{ complaint.id }}
+                    </h3>
+                    <span class="status-pill status-{{ complaint.status }}"
+                        style="font-size: 0.9rem; padding: 8px 16px;">
+                        {{ complaint.status | replace('_', ' ') | upper }}
+                    </span>
+                </div>
+
+                <!-- Severity -->
+                <div class="severity-badge severity-{{ complaint.severity }}"
+                    style="margin-bottom: 20px; border-color: {{ severity_colors.get(complaint.severity, '#3b82f6') }}40; background: {{ severity_colors.get(complaint.severity, '#3b82f6') }}15;">
+                    <span class="severity-dot"
+                        style="background: {{ severity_colors.get(complaint.severity, '#3b82f6') }};"></span>
+                    <span
+                        style="color: {{ severity_colors.get(complaint.severity, '#3b82f6') }}; font-weight: 700; text-transform: uppercase;">{{
+                        complaint.severity }}</span>
+                    <span style="color: var(--text-muted);">Priority</span>
+                    <span style="color: {{ severity_colors.get(complaint.severity, '#3b82f6') }}; font-weight: 700;">{{
+                        complaint.severity_score }}/100</span>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="contact-grid" style="margin-bottom: 16px;">
+                    <div class="contact-item">
+                        <div class="label">Date Filed</div>
+                        <div class="value">{{ complaint.created_at[:10] }}</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="label">Location</div>
+                        <div class="value">{{ complaint.area }}, {{ complaint.city }}</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="label">Issue Type</div>
+                        <div class="value">{{ complaint.display_label }}</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="label">Forwarded</div>
+                        <div class="value">{{ "Yes ✅" if complaint.emailed else "Not Yet" }}</div>
+                    </div>
+                </div>
+
+                <div
+                    style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-md); border: 1px solid var(--border-glass); margin-bottom: 16px;">
+                    <div class="label" style="margin-bottom: 8px;">Complaint Text</div>
+                    <p style="color: var(--text-primary); line-height: 1.7;">{{ complaint.complaint_text }}</p>
+                </div>
+
+                {% if complaint.authority_dept %}
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <div class="label">Department</div>
+                        <div class="value">{{ complaint.authority_dept }}</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="label">Phone</div>
+                        <div class="value">📞 {{ complaint.authority_phone }}</div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ═══════ ESCALATION TIMER ═══════ -->
+                {% if escalation %}
+                <div style="margin-top: 20px; padding: 16px 20px; border-radius: var(--radius-md);
+                    {% if escalation.is_overdue %}
+                        background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
+                    {% elif escalation.hours_remaining <= 12 and escalation.hours_remaining > 0 %}
+                        background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25);
+                    {% else %}
+                        background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
+                    {% endif %}
+                ">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <strong style="font-size: 0.85rem;
+                                {% if escalation.is_overdue %}
+                                    color: #ef4444;
+                                {% elif escalation.hours_remaining <= 12 and escalation.hours_remaining > 0 %}
+                                    color: #f59e0b;
+                                {% else %}
+                                    color: #818cf8;
+                                {% endif %}
+                            ">⏱️ Escalation Timer</strong>
+                            <p style="margin: 4px 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                                {{ escalation.label }}
+                            </p>
+                        </div>
+                        {% if escalation.is_overdue %}
+                        <div
+                            style="padding: 6px 14px; border-radius: 20px; background: rgba(239,68,68,0.15); font-size: 0.8rem; font-weight: 600; color: #ef4444;">
+                            OVERDUE — ESCALATE
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if complaint.status == 'forwarded' and escalation.hours_remaining > 0 %}
+                    <!-- Progress bar -->
+                    <div
+                        style="margin-top: 12px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; border-radius: 3px; transition: width 0.5s;
+                            width: {{ [((48 - escalation.hours_remaining) / 48 * 100), 100] | min }}%;
+                            {% if escalation.hours_remaining <= 12 %}
+                                background: linear-gradient(90deg, #f59e0b, #ef4444);
+                            {% else %}
+                                background: linear-gradient(90deg, #818cf8, #6366f1);
+                            {% endif %}
+                        "></div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- ═══════ STATUS TIMELINE ═══════ -->
+                <div style="margin-top: 24px;">
+                    <div class="label" style="margin-bottom: 12px;">Status Timeline</div>
+                    <div class="timeline">
+                        <div class="timeline-item active">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <strong>📋 Submitted</strong>
+                                <span>{{ complaint.created_at[:10] }}</span>
+                            </div>
+                        </div>
+                        <div
+                            class="timeline-item {{ 'active' if complaint.status in ['forwarded', 'acknowledged', 'in_progress', 'resolved'] else '' }}">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <strong>📤 Forwarded to GHMC</strong>
+                                <span>{{ complaint.forwarded_at[:10] if complaint.forwarded_at else "Pending" }}</span>
+                            </div>
+                        </div>
+                        <div
+                            class="timeline-item {{ 'active' if complaint.status in ['acknowledged', 'in_progress', 'resolved'] else '' }}">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <strong>✅ Acknowledged by Authority</strong>
+                                <span>{{ "Confirmed" if complaint.status in ['acknowledged', 'in_progress', 'resolved']
+                                    else "Awaiting" }}</span>
+                            </div>
+                        </div>
+                        <div
+                            class="timeline-item {{ 'active' if complaint.status in ['in_progress', 'resolved'] else '' }}">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <strong>🔧 Work In Progress</strong>
+                                <span>{{ "Active" if complaint.status in ['in_progress', 'resolved'] else "Awaiting"
+                                    }}</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item {{ 'active' if complaint.status == 'resolved' else '' }}">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <strong>🎉 Resolved</strong>
+                                <span>{{ complaint.resolved_at[:10] if complaint.resolved_at else "Awaiting" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════ RESPONSE NOTES ═══════ -->
+                {% if complaint.response_notes %}
+                <div
+                    style="margin-top: 20px; padding: 14px 18px; background: rgba(37,211,102,0.06); border: 1px solid rgba(37,211,102,0.15); border-radius: var(--radius-md);">
+                    <div class="label" style="margin-bottom: 6px; color: #25d366;">📝 Response Notes</div>
+                    <p style="margin: 0; color: var(--text-primary); line-height: 1.6;">{{ complaint.response_notes }}
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- ═══════ COMMUNITY VERIFICATION ═══════ -->
+                <div
+                    style="margin-top: 20px; padding: 16px 20px; background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: var(--radius-md);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <strong style="color: #818cf8; font-size: 0.85rem;">👥 Community Verification</strong>
+                            <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                                {% if complaint.community_verified and complaint.community_verified > 0 %}
+                                <strong>{{ complaint.community_verified }}</strong> neighbor(s) have confirmed this
+                                issue
+                                {% else %}
+                                Be the first to verify this issue exists in your area
+                                {% endif %}
+                            </p>
+                        </div>
+                        <form method="post" action="{{ url_for('verify_complaint', complaint_id=complaint.id) }}"
+                            style="margin: 0;">
+                            <button type="submit" class="btn btn-secondary"
+                                style="font-size: 0.8rem; padding: 8px 16px;">
+                                👍 I confirm this issue
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ═══════ UPDATE STATUS ═══════ -->
+                <div style="margin-top: 24px;">
+                    <div class="label" style="margin-bottom: 12px;">📊 Update Status</div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                        Did you get a response from GHMC? Update your complaint status below.
+                    </p>
+                    <form method="post" action="{{ url_for('update_complaint_status', complaint_id=complaint.id) }}">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <button type="submit" name="status" value="acknowledged" class="btn btn-secondary"
+                                style="font-size: 0.8rem; padding: 8px 14px; background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: #22c55e;">
+                                ✅ They Acknowledged
+                            </button>
+                            <button type="submit" name="status" value="in_progress" class="btn btn-secondary"
+                                style="font-size: 0.8rem; padding: 8px 14px; background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: #f59e0b;">
+                                🔧 Work Started
+                            </button>
+                            <button type="submit" name="status" value="resolved" class="btn btn-secondary"
+                                style="font-size: 0.8rem; padding: 8px 14px; background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.3); color: #818cf8;">
+                                🎉 Resolved
+                            </button>
+                            <button type="submit" name="status" value="no_response" class="btn btn-secondary"
+                                style="font-size: 0.8rem; padding: 8px 14px; background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #ef4444;">
+                                ❌ No Response
+                            </button>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <textarea name="notes"
+                                placeholder="Optional: Add any response details from GHMC (e.g., 'They said crew will arrive by evening')"
+                                rows="2" style="font-size: 0.85rem;"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ═══════ FOLLOW-UP GUIDE ═══════ -->
+                {% if complaint.status in ['forwarded', 'no_response'] and escalation and escalation.is_overdue %}
+                <div
+                    style="margin-top: 20px; padding: 16px 20px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-md);">
+                    <strong style="color: #ef4444; font-size: 0.9rem;">🔺 Escalation Guide</strong>
+                    <p style="margin: 8px 0 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
+                        It's been over 48 hours with no response. Here's what to do:
+                    </p>
+                    <ol
+                        style="margin: 10px 0 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-secondary); line-height: 2;">
+                        <li>Send a follow-up WhatsApp: <em>"I sent Report <strong>{{ complaint.id }}</strong> — no
+                                response in 48h. Please acknowledge."</em></li>
+                        <li>Call the GHMC helpline: <a href="tel:040-21111111" style="color: #818cf8;">040-21111111</a>
+                        </li>
+                        <li>Tag <strong>@GHMCOnline</strong> on Twitter/X with your Report ID</li>
+                        <li>File on the <a href="https://pgportal.gov.in/" target="_blank"
+                                style="color: #818cf8;">Central PG Portal (pgportal.gov.in)</a> as last resort</li>
+                    </ol>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">CivicConnect <span style="color: var(--accent-blue);">AI</span></div>
+                <div class="footer-text">© 2025 CivicConnect AI. Built for smarter communities.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+    </script>
+</body>
+
+</html>

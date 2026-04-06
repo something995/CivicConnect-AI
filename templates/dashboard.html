@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard — CivicConnect AI</title>
+    <meta name="description"
+        content="Analytics dashboard for civic complaints — view issue distribution, severity analysis, and recent complaints.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <span class="civic">CIVIC</span><span class="connect">CONNECT</span><span class="ai">AI</span>
+            <span class="logo-dot"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}" class="active">Dashboard</a></li>
+            <li><a href="{{ url_for('track') }}">Track</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('admin_login') }}" style="color: #f59e0b;">🏛️ GHMC</a></li>
+        </ul>
+    </nav>
+
+    <div class="result-header">
+        <div class="container">
+            <h1>Analytics <span class="gradient-text">Dashboard</span></h1>
+            <p>Real-time overview of all civic complaints</p>
+        </div>
+    </div>
+
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+
+            <!-- Stat Cards -->
+            <div class="stat-cards-grid">
+                <div class="glass-card stat-card-mini">
+                    <div class="stat-card-icon" style="background: rgba(59,130,246,0.15);">📋</div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.total }}</div>
+                        <div class="stat-card-label">Total Complaints</div>
+                    </div>
+                </div>
+                <div class="glass-card stat-card-mini">
+                    <div class="stat-card-icon" style="background: rgba(239,68,68,0.15);">🔴</div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.by_severity | selectattr('severity', 'equalto',
+                            'critical') | map(attribute='count') | first | default(0) }}</div>
+                        <div class="stat-card-label">Critical Issues</div>
+                    </div>
+                </div>
+                <div class="glass-card stat-card-mini">
+                    <div class="stat-card-icon" style="background: rgba(16,185,129,0.15);">✅</div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.by_status | selectattr('status', 'equalto', 'forwarded') |
+                            map(attribute='count') | first | default(0) }}</div>
+                        <div class="stat-card-label">Forwarded</div>
+                    </div>
+                </div>
+                <div class="glass-card stat-card-mini">
+                    <div class="stat-card-icon" style="background: rgba(245,158,11,0.15);">📍</div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.by_area | length }}</div>
+                        <div class="stat-card-label">Areas Covered</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="glass-card chart-card">
+                    <h3>Issues by Type</h3>
+                    <canvas id="typeChart"></canvas>
+                </div>
+                <div class="glass-card chart-card">
+                    <h3>Severity Distribution</h3>
+                    <canvas id="severityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="glass-card chart-card">
+                    <h3>Top Areas</h3>
+                    <canvas id="areaChart"></canvas>
+                </div>
+                <div class="glass-card chart-card">
+                    <h3>Complaint Status</h3>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Complaints Table -->
+            <div class="glass-card" style="margin-top: 24px;">
+                <h3 style="margin-bottom: 20px;">📋 Recent Complaints</h3>
+                {% if recent %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Area</th>
+                                <th>Issue</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in recent %}
+                            <tr>
+                                <td><code>{{ c.id }}</code></td>
+                                <td>{{ c.created_at[:10] }}</td>
+                                <td>{{ c.area }}</td>
+                                <td>{{ c.display_label }}</td>
+                                <td>
+                                    <span class="severity-pill severity-{{ c.severity }}">
+                                        {{ c.severity | upper }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-pill status-{{ c.status }}">
+                                        {{ c.status | capitalize }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p style="color: var(--text-muted); text-align: center; padding: 40px;">
+                    No complaints yet. <a href="{{ url_for('index') }}">Report one now!</a>
+                </p>
+                {% endif %}
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">CivicConnect <span style="color: var(--accent-blue);">AI</span></div>
+                <div class="footer-text">© 2025 CivicConnect AI. Built for smarter communities.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+
+        // Chart.js defaults for dark theme
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#f43f5e', '#ec4899', '#14b8a6'];
+
+        // Issue Type Chart (doughnut)
+        const typeData = {{ stats.by_type | tojson }};
+        if (typeData.length) {
+            new Chart(document.getElementById('typeChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: typeData.map(d => d.issue_type.replace(/_/g, ' ')),
+                    datasets: [{
+                        data: typeData.map(d => d.count),
+                        backgroundColor: COLORS.slice(0, typeData.length),
+                        borderWidth: 0,
+                        hoverOffset: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 12 } }
+                    }
+                }
+            });
+        }
+
+        // Severity Chart (doughnut)
+        const sevData = {{ stats.by_severity | tojson }};
+        const sevColors = { critical: '#ef4444', high: '#f59e0b', medium: '#3b82f6', low: '#10b981' };
+        if (sevData.length) {
+            new Chart(document.getElementById('severityChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: sevData.map(d => d.severity.charAt(0).toUpperCase() + d.severity.slice(1)),
+                    datasets: [{
+                        data: sevData.map(d => d.count),
+                        backgroundColor: sevData.map(d => sevColors[d.severity] || '#64748b'),
+                        borderWidth: 0,
+                        hoverOffset: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 12 } }
+                    }
+                }
+            });
+        }
+
+        // Area Chart (horizontal bar)
+        const areaData = {{ stats.by_area | tojson }};
+        if (areaData.length) {
+            new Chart(document.getElementById('areaChart'), {
+                type: 'bar',
+                data: {
+                    labels: areaData.map(d => d.area),
+                    datasets: [{
+                        label: 'Complaints',
+                        data: areaData.map(d => d.count),
+                        backgroundColor: 'rgba(59,130,246,0.6)',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.04)' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Status Chart (pie)
+        const statusData = {{ stats.by_status | tojson }};
+        const statusColors = { submitted: '#3b82f6', forwarded: '#10b981', resolved: '#8b5cf6', pending: '#f59e0b' };
+        if (statusData.length) {
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: statusData.map(d => d.status.charAt(0).toUpperCase() + d.status.slice(1)),
+                    datasets: [{
+                        data: statusData.map(d => d.count),
+                        backgroundColor: statusData.map(d => statusColors[d.status] || '#64748b'),
+                        borderWidth: 0,
+                        hoverOffset: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 12 } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

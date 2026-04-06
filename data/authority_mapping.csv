@@ -1,0 +1,271 @@
+city,area,issue_type,department_name,phone,email
+Hyderabad,Kukatpally,pothole_road_damage,GHMC Roads & Buildings – Kukatpally,040-2326-0001,roads.kukatpally@ghmc.gov.in
+Hyderabad,Kukatpally,garbage,GHMC Sanitation – Kukatpally,040-2326-0002,sanitation.kukatpally@ghmc.gov.in
+Hyderabad,Kukatpally,sewage_overflow,GHMC Sewerage – Kukatpally,040-2326-0003,sewer.kukatpally@ghmc.gov.in
+Hyderabad,Kukatpally,waterlogging,GHMC Disaster Management – Kukatpally,040-2326-0004,disaster.kukatpally@ghmc.gov.in
+Hyderabad,Kukatpally,streetlight_or_electricity,GHMC Electrical Wing – Kukatpally,040-2326-0005,power.kukatpally@ghmc.gov.in
+Hyderabad,Kukatpally,others,GHMC General Grievance – Kukatpally,040-2326-0006,grievance.kukatpally@ghmc.gov.in
+Hyderabad,Mehdipatnam,pothole_road_damage,GHMC Roads & Buildings – Mehdipatnam,040-2326-1001,roads.mehdipatnam@ghmc.gov.in
+Hyderabad,Mehdipatnam,garbage,GHMC Sanitation – Mehdipatnam,040-2326-1002,sanitation.mehdipatnam@ghmc.gov.in
+Hyderabad,Mehdipatnam,sewage_overflow,GHMC Sewerage – Mehdipatnam,040-2326-1003,sewer.mehdipatnam@ghmc.gov.in
+Hyderabad,Mehdipatnam,waterlogging,GHMC Disaster Management – Mehdipatnam,040-2326-1004,disaster.mehdipatnam@ghmc.gov.in
+Hyderabad,Mehdipatnam,streetlight_or_electricity,GHMC Electrical Wing – Mehdipatnam,040-2326-1005,power.mehdipatnam@ghmc.gov.in
+Hyderabad,Mehdipatnam,others,GHMC General Grievance – Mehdipatnam,040-2326-1006,grievance.mehdipatnam@ghmc.gov.in
+Hyderabad,LB Nagar,pothole_road_damage,GHMC Roads & Buildings – LB Nagar,040-2326-2001,roads.lbnagar@ghmc.gov.in
+Hyderabad,LB Nagar,garbage,GHMC Sanitation – LB Nagar,040-2326-2002,sanitation.lbnagar@ghmc.gov.in
+Hyderabad,LB Nagar,sewage_overflow,GHMC Sewerage – LB Nagar,040-2326-2003,sewer.lbnagar@ghmc.gov.in
+Hyderabad,LB Nagar,waterlogging,GHMC Disaster Management – LB Nagar,040-2326-2004,disaster.lbnagar@ghmc.gov.in
+Hyderabad,LB Nagar,streetlight_or_electricity,GHMC Electrical Wing – LB Nagar,040-2326-2005,power.lbnagar@ghmc.gov.in
+Hyderabad,LB Nagar,others,GHMC General Grievance – LB Nagar,040-2326-2006,grievance.lbnagar@ghmc.gov.in
+Hyderabad,Uppal,pothole_road_damage,GHMC Roads & Buildings – Uppal,040-2326-3001,roads.uppal@ghmc.gov.in
+Hyderabad,Uppal,garbage,GHMC Sanitation – Uppal,040-2326-3002,sanitation.uppal@ghmc.gov.in
+Hyderabad,Uppal,sewage_overflow,GHMC Sewerage – Uppal,040-2326-3003,sewer.uppal@ghmc.gov.in
+Hyderabad,Uppal,waterlogging,GHMC Disaster Management – Uppal,040-2326-3004,disaster.uppal@ghmc.gov.in
+Hyderabad,Uppal,streetlight_or_electricity,GHMC Electrical Wing – Uppal,040-2326-3005,power.uppal@ghmc.gov.in
+Hyderabad,Uppal,others,GHMC General Grievance – Uppal,040-2326-3006,grievance.uppal@ghmc.gov.in
+Hyderabad,Serilingampally,pothole_road_damage,GHMC Roads & Buildings – Serilingampally,040-2326-4001,roads.serilingampally@ghmc.gov.in
+Hyderabad,Serilingampally,garbage,GHMC Sanitation – Serilingampally,040-2326-4002,sanitation.serilingampally@ghmc.gov.in
+Hyderabad,Serilingampally,sewage_overflow,GHMC Sewerage – Serilingampally,040-2326-4003,sewer.serilingampally@ghmc.gov.in
+Hyderabad,Serilingampally,waterlogging,GHMC Disaster Management – Serilingampally,040-2326-4004,disaster.serilingampally@ghmc.gov.in
+Hyderabad,Serilingampally,streetlight_or_electricity,GHMC Electrical Wing – Serilingampally,040-2326-4005,power.serilingampally@ghmc.gov.in
+Hyderabad,Serilingampally,others,GHMC General Grievance – Serilingampally,040-2326-4006,grievance.serilingampally@ghmc.gov.in
+Hyderabad,Madhapur,pothole_road_damage,GHMC Roads & Buildings – Madhapur,040-2326-5001,roads.madhapur@ghmc.gov.in
+Hyderabad,Madhapur,garbage,GHMC Sanitation – Madhapur,040-2326-5002,sanitation.madhapur@ghmc.gov.in
+Hyderabad,Madhapur,sewage_overflow,GHMC Sewerage – Madhapur,040-2326-5003,sewer.madhapur@ghmc.gov.in
+Hyderabad,Madhapur,waterlogging,GHMC Disaster Management – Madhapur,040-2326-5004,disaster.madhapur@ghmc.gov.in
+Hyderabad,Madhapur,streetlight_or_electricity,GHMC Electrical Wing – Madhapur,040-2326-5005,power.madhapur@ghmc.gov.in
+Hyderabad,Madhapur,others,GHMC General Grievance – Madhapur,040-2326-5006,grievance.madhapur@ghmc.gov.in
+Hyderabad,Gachibowli,pothole_road_damage,GHMC Roads & Buildings – Gachibowli,040-2326-6001,roads.gachibowli@ghmc.gov.in
+Hyderabad,Gachibowli,garbage,GHMC Sanitation – Gachibowli,040-2326-6002,sanitation.gachibowli@ghmc.gov.in
+Hyderabad,Gachibowli,sewage_overflow,GHMC Sewerage – Gachibowli,040-2326-6003,sewer.gachibowli@ghmc.gov.in
+Hyderabad,Gachibowli,waterlogging,GHMC Disaster Management – Gachibowli,040-2326-6004,disaster.gachibowli@ghmc.gov.in
+Hyderabad,Gachibowli,streetlight_or_electricity,GHMC Electrical Wing – Gachibowli,040-2326-6005,power.gachibowli@ghmc.gov.in
+Hyderabad,Gachibowli,others,GHMC General Grievance – Gachibowli,040-2326-6006,grievance.gachibowli@ghmc.gov.in
+Hyderabad,Ameerpet,pothole_road_damage,GHMC Roads & Buildings – Ameerpet,040-2326-7001,roads.ameerpet@ghmc.gov.in
+Hyderabad,Ameerpet,garbage,GHMC Sanitation – Ameerpet,040-2326-7002,sanitation.ameerpet@ghmc.gov.in
+Hyderabad,Ameerpet,sewage_overflow,GHMC Sewerage – Ameerpet,040-2326-7003,sewer.ameerpet@ghmc.gov.in
+Hyderabad,Ameerpet,waterlogging,GHMC Disaster Management – Ameerpet,040-2326-7004,disaster.ameerpet@ghmc.gov.in
+Hyderabad,Ameerpet,streetlight_or_electricity,GHMC Electrical Wing – Ameerpet,040-2326-7005,power.ameerpet@ghmc.gov.in
+Hyderabad,Ameerpet,others,GHMC General Grievance – Ameerpet,040-2326-7006,grievance.ameerpet@ghmc.gov.in
+Hyderabad,Dilsukhnagar,pothole_road_damage,GHMC Roads & Buildings – Dilsukhnagar,040-2326-8001,roads.dilsukhnagar@ghmc.gov.in
+Hyderabad,Dilsukhnagar,garbage,GHMC Sanitation – Dilsukhnagar,040-2326-8002,sanitation.dilsukhnagar@ghmc.gov.in
+Hyderabad,Dilsukhnagar,sewage_overflow,GHMC Sewerage – Dilsukhnagar,040-2326-8003,sewer.dilsukhnagar@ghmc.gov.in
+Hyderabad,Dilsukhnagar,waterlogging,GHMC Disaster Management – Dilsukhnagar,040-2326-8004,disaster.dilsukhnagar@ghmc.gov.in
+Hyderabad,Dilsukhnagar,streetlight_or_electricity,GHMC Electrical Wing – Dilsukhnagar,040-2326-8005,power.dilsukhnagar@ghmc.gov.in
+Hyderabad,Dilsukhnagar,others,GHMC General Grievance – Dilsukhnagar,040-2326-8006,grievance.dilsukhnagar@ghmc.gov.in
+Hyderabad,Secunderabad,pothole_road_damage,GHMC Roads & Buildings – Secunderabad,040-2326-9001,roads.secunderabad@ghmc.gov.in
+Hyderabad,Secunderabad,garbage,GHMC Sanitation – Secunderabad,040-2326-9002,sanitation.secunderabad@ghmc.gov.in
+Hyderabad,Secunderabad,sewage_overflow,GHMC Sewerage – Secunderabad,040-2326-9003,sewer.secunderabad@ghmc.gov.in
+Hyderabad,Secunderabad,waterlogging,GHMC Disaster Management – Secunderabad,040-2326-9004,disaster.secunderabad@ghmc.gov.in
+Hyderabad,Secunderabad,streetlight_or_electricity,GHMC Electrical Wing – Secunderabad,040-2326-9005,power.secunderabad@ghmc.gov.in
+Hyderabad,Secunderabad,others,GHMC General Grievance – Secunderabad,040-2326-9006,grievance.secunderabad@ghmc.gov.in
+Hyderabad,Begumpet,pothole_road_damage,GHMC Roads & Buildings – Begumpet,040-2327-0001,roads.begumpet@ghmc.gov.in
+Hyderabad,Begumpet,garbage,GHMC Sanitation – Begumpet,040-2327-0002,sanitation.begumpet@ghmc.gov.in
+Hyderabad,Begumpet,sewage_overflow,GHMC Sewerage – Begumpet,040-2327-0003,sewer.begumpet@ghmc.gov.in
+Hyderabad,Begumpet,waterlogging,GHMC Disaster Management – Begumpet,040-2327-0004,disaster.begumpet@ghmc.gov.in
+Hyderabad,Begumpet,streetlight_or_electricity,GHMC Electrical Wing – Begumpet,040-2327-0005,power.begumpet@ghmc.gov.in
+Hyderabad,Begumpet,others,GHMC General Grievance – Begumpet,040-2327-0006,grievance.begumpet@ghmc.gov.in
+Hyderabad,Hitech City,pothole_road_damage,GHMC Roads & Buildings – Hitech City,040-2327-1001,roads.hitechcity@ghmc.gov.in
+Hyderabad,Hitech City,garbage,GHMC Sanitation – Hitech City,040-2327-1002,sanitation.hitechcity@ghmc.gov.in
+Hyderabad,Hitech City,sewage_overflow,GHMC Sewerage – Hitech City,040-2327-1003,sewer.hitechcity@ghmc.gov.in
+Hyderabad,Hitech City,waterlogging,GHMC Disaster Management – Hitech City,040-2327-1004,disaster.hitechcity@ghmc.gov.in
+Hyderabad,Hitech City,streetlight_or_electricity,GHMC Electrical Wing – Hitech City,040-2327-1005,power.hitechcity@ghmc.gov.in
+Hyderabad,Hitech City,others,GHMC General Grievance – Hitech City,040-2327-1006,grievance.hitechcity@ghmc.gov.in
+Hyderabad,KPHB Colony,pothole_road_damage,GHMC Roads & Buildings – KPHB Colony,040-2327-2001,roads.kphb@ghmc.gov.in
+Hyderabad,KPHB Colony,garbage,GHMC Sanitation – KPHB Colony,040-2327-2002,sanitation.kphb@ghmc.gov.in
+Hyderabad,KPHB Colony,sewage_overflow,GHMC Sewerage – KPHB Colony,040-2327-2003,sewer.kphb@ghmc.gov.in
+Hyderabad,KPHB Colony,waterlogging,GHMC Disaster Management – KPHB Colony,040-2327-2004,disaster.kphb@ghmc.gov.in
+Hyderabad,KPHB Colony,streetlight_or_electricity,GHMC Electrical Wing – KPHB Colony,040-2327-2005,power.kphb@ghmc.gov.in
+Hyderabad,KPHB Colony,others,GHMC General Grievance – KPHB Colony,040-2327-2006,grievance.kphb@ghmc.gov.in
+Hyderabad,Kondapur,pothole_road_damage,GHMC Roads & Buildings – Kondapur,040-2327-3001,roads.kondapur@ghmc.gov.in
+Hyderabad,Kondapur,garbage,GHMC Sanitation – Kondapur,040-2327-3002,sanitation.kondapur@ghmc.gov.in
+Hyderabad,Kondapur,sewage_overflow,GHMC Sewerage – Kondapur,040-2327-3003,sewer.kondapur@ghmc.gov.in
+Hyderabad,Kondapur,waterlogging,GHMC Disaster Management – Kondapur,040-2327-3004,disaster.kondapur@ghmc.gov.in
+Hyderabad,Kondapur,streetlight_or_electricity,GHMC Electrical Wing – Kondapur,040-2327-3005,power.kondapur@ghmc.gov.in
+Hyderabad,Kondapur,others,GHMC General Grievance – Kondapur,040-2327-3006,grievance.kondapur@ghmc.gov.in
+Hyderabad,Miyapur,pothole_road_damage,GHMC Roads & Buildings – Miyapur,040-2327-4001,roads.miyapur@ghmc.gov.in
+Hyderabad,Miyapur,garbage,GHMC Sanitation – Miyapur,040-2327-4002,sanitation.miyapur@ghmc.gov.in
+Hyderabad,Miyapur,sewage_overflow,GHMC Sewerage – Miyapur,040-2327-4003,sewer.miyapur@ghmc.gov.in
+Hyderabad,Miyapur,waterlogging,GHMC Disaster Management – Miyapur,040-2327-4004,disaster.miyapur@ghmc.gov.in
+Hyderabad,Miyapur,streetlight_or_electricity,GHMC Electrical Wing – Miyapur,040-2327-4005,power.miyapur@ghmc.gov.in
+Hyderabad,Miyapur,others,GHMC General Grievance – Miyapur,040-2327-4006,grievance.miyapur@ghmc.gov.in
+Hyderabad,Manikonda,pothole_road_damage,GHMC Roads & Buildings – Manikonda,040-2327-5001,roads.manikonda@ghmc.gov.in
+Hyderabad,Manikonda,garbage,GHMC Sanitation – Manikonda,040-2327-5002,sanitation.manikonda@ghmc.gov.in
+Hyderabad,Manikonda,sewage_overflow,GHMC Sewerage – Manikonda,040-2327-5003,sewer.manikonda@ghmc.gov.in
+Hyderabad,Manikonda,waterlogging,GHMC Disaster Management – Manikonda,040-2327-5004,disaster.manikonda@ghmc.gov.in
+Hyderabad,Manikonda,streetlight_or_electricity,GHMC Electrical Wing – Manikonda,040-2327-5005,power.manikonda@ghmc.gov.in
+Hyderabad,Manikonda,others,GHMC General Grievance – Manikonda,040-2327-5006,grievance.manikonda@ghmc.gov.in
+Hyderabad,Jubilee Hills,pothole_road_damage,GHMC Roads & Buildings – Jubilee Hills,040-2327-6001,roads.jubileehills@ghmc.gov.in
+Hyderabad,Jubilee Hills,garbage,GHMC Sanitation – Jubilee Hills,040-2327-6002,sanitation.jubileehills@ghmc.gov.in
+Hyderabad,Jubilee Hills,sewage_overflow,GHMC Sewerage – Jubilee Hills,040-2327-6003,sewer.jubileehills@ghmc.gov.in
+Hyderabad,Jubilee Hills,waterlogging,GHMC Disaster Management – Jubilee Hills,040-2327-6004,disaster.jubileehills@ghmc.gov.in
+Hyderabad,Jubilee Hills,streetlight_or_electricity,GHMC Electrical Wing – Jubilee Hills,040-2327-6005,power.jubileehills@ghmc.gov.in
+Hyderabad,Jubilee Hills,others,GHMC General Grievance – Jubilee Hills,040-2327-6006,grievance.jubileehills@ghmc.gov.in
+Hyderabad,Banjara Hills,pothole_road_damage,GHMC Roads & Buildings – Banjara Hills,040-2327-7001,roads.banjarahills@ghmc.gov.in
+Hyderabad,Banjara Hills,garbage,GHMC Sanitation – Banjara Hills,040-2327-7002,sanitation.banjarahills@ghmc.gov.in
+Hyderabad,Banjara Hills,sewage_overflow,GHMC Sewerage – Banjara Hills,040-2327-7003,sewer.banjarahills@ghmc.gov.in
+Hyderabad,Banjara Hills,waterlogging,GHMC Disaster Management – Banjara Hills,040-2327-7004,disaster.banjarahills@ghmc.gov.in
+Hyderabad,Banjara Hills,streetlight_or_electricity,GHMC Electrical Wing – Banjara Hills,040-2327-7005,power.banjarahills@ghmc.gov.in
+Hyderabad,Banjara Hills,others,GHMC General Grievance – Banjara Hills,040-2327-7006,grievance.banjarahills@ghmc.gov.in
+Hyderabad,Tarnaka,pothole_road_damage,GHMC Roads & Buildings – Tarnaka,040-2327-8001,roads.tarnaka@ghmc.gov.in
+Hyderabad,Tarnaka,garbage,GHMC Sanitation – Tarnaka,040-2327-8002,sanitation.tarnaka@ghmc.gov.in
+Hyderabad,Tarnaka,sewage_overflow,GHMC Sewerage – Tarnaka,040-2327-8003,sewer.tarnaka@ghmc.gov.in
+Hyderabad,Tarnaka,waterlogging,GHMC Disaster Management – Tarnaka,040-2327-8004,disaster.tarnaka@ghmc.gov.in
+Hyderabad,Tarnaka,streetlight_or_electricity,GHMC Electrical Wing – Tarnaka,040-2327-8005,power.tarnaka@ghmc.gov.in
+Hyderabad,Tarnaka,others,GHMC General Grievance – Tarnaka,040-2327-8006,grievance.tarnaka@ghmc.gov.in
+Hyderabad,Malkajgiri,pothole_road_damage,GHMC Roads & Buildings – Malkajgiri,040-2328-0001,roads.malkajgiri@ghmc.gov.in
+Hyderabad,Malkajgiri,garbage,GHMC Sanitation – Malkajgiri,040-2328-0002,sanitation.malkajgiri@ghmc.gov.in
+Hyderabad,Malkajgiri,sewage_overflow,GHMC Sewerage – Malkajgiri,040-2328-0003,sewer.malkajgiri@ghmc.gov.in
+Hyderabad,Malkajgiri,waterlogging,GHMC Disaster Management – Malkajgiri,040-2328-0004,disaster.malkajgiri@ghmc.gov.in
+Hyderabad,Malkajgiri,streetlight_or_electricity,GHMC Electrical Wing – Malkajgiri,040-2328-0005,power.malkajgiri@ghmc.gov.in
+Hyderabad,Malkajgiri,others,GHMC General Grievance – Malkajgiri,040-2328-0006,grievance.malkajgiri@ghmc.gov.in
+Hyderabad,Kompally,pothole_road_damage,GHMC Roads & Buildings – Kompally,040-2328-1001,roads.kompally@ghmc.gov.in
+Hyderabad,Kompally,garbage,GHMC Sanitation – Kompally,040-2328-1002,sanitation.kompally@ghmc.gov.in
+Hyderabad,Kompally,sewage_overflow,GHMC Sewerage – Kompally,040-2328-1003,sewer.kompally@ghmc.gov.in
+Hyderabad,Kompally,waterlogging,GHMC Disaster Management – Kompally,040-2328-1004,disaster.kompally@ghmc.gov.in
+Hyderabad,Kompally,streetlight_or_electricity,GHMC Electrical Wing – Kompally,040-2328-1005,power.kompally@ghmc.gov.in
+Hyderabad,Kompally,others,GHMC General Grievance – Kompally,040-2328-1006,grievance.kompally@ghmc.gov.in
+Hyderabad,Nagole,pothole_road_damage,GHMC Roads & Buildings – Nagole,040-2328-2001,roads.nagole@ghmc.gov.in
+Hyderabad,Nagole,garbage,GHMC Sanitation – Nagole,040-2328-2002,sanitation.nagole@ghmc.gov.in
+Hyderabad,Nagole,sewage_overflow,GHMC Sewerage – Nagole,040-2328-2003,sewer.nagole@ghmc.gov.in
+Hyderabad,Nagole,waterlogging,GHMC Disaster Management – Nagole,040-2328-2004,disaster.nagole@ghmc.gov.in
+Hyderabad,Nagole,streetlight_or_electricity,GHMC Electrical Wing – Nagole,040-2328-2005,power.nagole@ghmc.gov.in
+Hyderabad,Nagole,others,GHMC General Grievance – Nagole,040-2328-2006,grievance.nagole@ghmc.gov.in
+Hyderabad,Vanasthalipuram,pothole_road_damage,GHMC Roads & Buildings – Vanasthalipuram,040-2328-3001,roads.vanasthalipuram@ghmc.gov.in
+Hyderabad,Vanasthalipuram,garbage,GHMC Sanitation – Vanasthalipuram,040-2328-3002,sanitation.vanasthalipuram@ghmc.gov.in
+Hyderabad,Vanasthalipuram,sewage_overflow,GHMC Sewerage – Vanasthalipuram,040-2328-3003,sewer.vanasthalipuram@ghmc.gov.in
+Hyderabad,Vanasthalipuram,waterlogging,GHMC Disaster Management – Vanasthalipuram,040-2328-3004,disaster.vanasthalipuram@ghmc.gov.in
+Hyderabad,Vanasthalipuram,streetlight_or_electricity,GHMC Electrical Wing – Vanasthalipuram,040-2328-3005,power.vanasthalipuram@ghmc.gov.in
+Hyderabad,Vanasthalipuram,others,GHMC General Grievance – Vanasthalipuram,040-2328-3006,grievance.vanasthalipuram@ghmc.gov.in
+Hyderabad,Charminar,pothole_road_damage,GHMC Roads & Buildings – Charminar,040-2328-4001,roads.charminar@ghmc.gov.in
+Hyderabad,Charminar,garbage,GHMC Sanitation – Charminar,040-2328-4002,sanitation.charminar@ghmc.gov.in
+Hyderabad,Charminar,sewage_overflow,GHMC Sewerage – Charminar,040-2328-4003,sewer.charminar@ghmc.gov.in
+Hyderabad,Charminar,waterlogging,GHMC Disaster Management – Charminar,040-2328-4004,disaster.charminar@ghmc.gov.in
+Hyderabad,Charminar,streetlight_or_electricity,GHMC Electrical Wing – Charminar,040-2328-4005,power.charminar@ghmc.gov.in
+Hyderabad,Charminar,others,GHMC General Grievance – Charminar,040-2328-4006,grievance.charminar@ghmc.gov.in
+Hyderabad,Tolichowki,pothole_road_damage,GHMC Roads & Buildings – Tolichowki,040-2328-5001,roads.tolichowki@ghmc.gov.in
+Hyderabad,Tolichowki,garbage,GHMC Sanitation – Tolichowki,040-2328-5002,sanitation.tolichowki@ghmc.gov.in
+Hyderabad,Tolichowki,sewage_overflow,GHMC Sewerage – Tolichowki,040-2328-5003,sewer.tolichowki@ghmc.gov.in
+Hyderabad,Tolichowki,waterlogging,GHMC Disaster Management – Tolichowki,040-2328-5004,disaster.tolichowki@ghmc.gov.in
+Hyderabad,Tolichowki,streetlight_or_electricity,GHMC Electrical Wing – Tolichowki,040-2328-5005,power.tolichowki@ghmc.gov.in
+Hyderabad,Tolichowki,others,GHMC General Grievance – Tolichowki,040-2328-5006,grievance.tolichowki@ghmc.gov.in
+Hyderabad,Moosapet,pothole_road_damage,GHMC Roads & Buildings – Moosapet,040-2328-6001,roads.moosapet@ghmc.gov.in
+Hyderabad,Moosapet,garbage,GHMC Sanitation – Moosapet,040-2328-6002,sanitation.moosapet@ghmc.gov.in
+Hyderabad,Moosapet,sewage_overflow,GHMC Sewerage – Moosapet,040-2328-6003,sewer.moosapet@ghmc.gov.in
+Hyderabad,Moosapet,waterlogging,GHMC Disaster Management – Moosapet,040-2328-6004,disaster.moosapet@ghmc.gov.in
+Hyderabad,Moosapet,streetlight_or_electricity,GHMC Electrical Wing – Moosapet,040-2328-6005,power.moosapet@ghmc.gov.in
+Hyderabad,Moosapet,others,GHMC General Grievance – Moosapet,040-2328-6006,grievance.moosapet@ghmc.gov.in
+Hyderabad,SR Nagar,pothole_road_damage,GHMC Roads & Buildings – SR Nagar,040-2328-7001,roads.srnagar@ghmc.gov.in
+Hyderabad,SR Nagar,garbage,GHMC Sanitation – SR Nagar,040-2328-7002,sanitation.srnagar@ghmc.gov.in
+Hyderabad,SR Nagar,sewage_overflow,GHMC Sewerage – SR Nagar,040-2328-7003,sewer.srnagar@ghmc.gov.in
+Hyderabad,SR Nagar,waterlogging,GHMC Disaster Management – SR Nagar,040-2328-7004,disaster.srnagar@ghmc.gov.in
+Hyderabad,SR Nagar,streetlight_or_electricity,GHMC Electrical Wing – SR Nagar,040-2328-7005,power.srnagar@ghmc.gov.in
+Hyderabad,SR Nagar,others,GHMC General Grievance – SR Nagar,040-2328-7006,grievance.srnagar@ghmc.gov.in
+Hyderabad,Habsiguda,pothole_road_damage,GHMC Roads & Buildings – Habsiguda,040-2328-8001,roads.habsiguda@ghmc.gov.in
+Hyderabad,Habsiguda,garbage,GHMC Sanitation – Habsiguda,040-2328-8002,sanitation.habsiguda@ghmc.gov.in
+Hyderabad,Habsiguda,sewage_overflow,GHMC Sewerage – Habsiguda,040-2328-8003,sewer.habsiguda@ghmc.gov.in
+Hyderabad,Habsiguda,waterlogging,GHMC Disaster Management – Habsiguda,040-2328-8004,disaster.habsiguda@ghmc.gov.in
+Hyderabad,Habsiguda,streetlight_or_electricity,GHMC Electrical Wing – Habsiguda,040-2328-8005,power.habsiguda@ghmc.gov.in
+Hyderabad,Habsiguda,others,GHMC General Grievance – Habsiguda,040-2328-8006,grievance.habsiguda@ghmc.gov.in
+Hyderabad,Alwal,pothole_road_damage,GHMC Roads & Buildings – Alwal,040-2328-9001,roads.alwal@ghmc.gov.in
+Hyderabad,Alwal,garbage,GHMC Sanitation – Alwal,040-2328-9002,sanitation.alwal@ghmc.gov.in
+Hyderabad,Alwal,sewage_overflow,GHMC Sewerage – Alwal,040-2328-9003,sewer.alwal@ghmc.gov.in
+Hyderabad,Alwal,waterlogging,GHMC Disaster Management – Alwal,040-2328-9004,disaster.alwal@ghmc.gov.in
+Hyderabad,Alwal,streetlight_or_electricity,GHMC Electrical Wing – Alwal,040-2328-9005,power.alwal@ghmc.gov.in
+Hyderabad,Alwal,others,GHMC General Grievance – Alwal,040-2328-9006,grievance.alwal@ghmc.gov.in
+Hyderabad,Bowenpally,pothole_road_damage,GHMC Roads & Buildings – Bowenpally,040-2329-0001,roads.bowenpally@ghmc.gov.in
+Hyderabad,Bowenpally,garbage,GHMC Sanitation – Bowenpally,040-2329-0002,sanitation.bowenpally@ghmc.gov.in
+Hyderabad,Bowenpally,sewage_overflow,GHMC Sewerage – Bowenpally,040-2329-0003,sewer.bowenpally@ghmc.gov.in
+Hyderabad,Bowenpally,waterlogging,GHMC Disaster Management – Bowenpally,040-2329-0004,disaster.bowenpally@ghmc.gov.in
+Hyderabad,Bowenpally,streetlight_or_electricity,GHMC Electrical Wing – Bowenpally,040-2329-0005,power.bowenpally@ghmc.gov.in
+Hyderabad,Bowenpally,others,GHMC General Grievance – Bowenpally,040-2329-0006,grievance.bowenpally@ghmc.gov.in
+Hyderabad,Nampally,pothole_road_damage,GHMC Roads & Buildings – Nampally,040-2329-1001,roads.nampally@ghmc.gov.in
+Hyderabad,Nampally,garbage,GHMC Sanitation – Nampally,040-2329-1002,sanitation.nampally@ghmc.gov.in
+Hyderabad,Nampally,sewage_overflow,GHMC Sewerage – Nampally,040-2329-1003,sewer.nampally@ghmc.gov.in
+Hyderabad,Nampally,waterlogging,GHMC Disaster Management – Nampally,040-2329-1004,disaster.nampally@ghmc.gov.in
+Hyderabad,Nampally,streetlight_or_electricity,GHMC Electrical Wing – Nampally,040-2329-1005,power.nampally@ghmc.gov.in
+Hyderabad,Nampally,others,GHMC General Grievance – Nampally,040-2329-1006,grievance.nampally@ghmc.gov.in
+Hyderabad,Abids,pothole_road_damage,GHMC Roads & Buildings – Abids,040-2329-2001,roads.abids@ghmc.gov.in
+Hyderabad,Abids,garbage,GHMC Sanitation – Abids,040-2329-2002,sanitation.abids@ghmc.gov.in
+Hyderabad,Abids,sewage_overflow,GHMC Sewerage – Abids,040-2329-2003,sewer.abids@ghmc.gov.in
+Hyderabad,Abids,waterlogging,GHMC Disaster Management – Abids,040-2329-2004,disaster.abids@ghmc.gov.in
+Hyderabad,Abids,streetlight_or_electricity,GHMC Electrical Wing – Abids,040-2329-2005,power.abids@ghmc.gov.in
+Hyderabad,Abids,others,GHMC General Grievance – Abids,040-2329-2006,grievance.abids@ghmc.gov.in
+Hyderabad,Khairatabad,pothole_road_damage,GHMC Roads & Buildings – Khairatabad,040-2329-3001,roads.khairatabad@ghmc.gov.in
+Hyderabad,Khairatabad,garbage,GHMC Sanitation – Khairatabad,040-2329-3002,sanitation.khairatabad@ghmc.gov.in
+Hyderabad,Khairatabad,sewage_overflow,GHMC Sewerage – Khairatabad,040-2329-3003,sewer.khairatabad@ghmc.gov.in
+Hyderabad,Khairatabad,waterlogging,GHMC Disaster Management – Khairatabad,040-2329-3004,disaster.khairatabad@ghmc.gov.in
+Hyderabad,Khairatabad,streetlight_or_electricity,GHMC Electrical Wing – Khairatabad,040-2329-3005,power.khairatabad@ghmc.gov.in
+Hyderabad,Khairatabad,others,GHMC General Grievance – Khairatabad,040-2329-3006,grievance.khairatabad@ghmc.gov.in
+Hyderabad,Erragadda,pothole_road_damage,GHMC Roads & Buildings – Erragadda,040-2329-4001,roads.erragadda@ghmc.gov.in
+Hyderabad,Erragadda,garbage,GHMC Sanitation – Erragadda,040-2329-4002,sanitation.erragadda@ghmc.gov.in
+Hyderabad,Erragadda,sewage_overflow,GHMC Sewerage – Erragadda,040-2329-4003,sewer.erragadda@ghmc.gov.in
+Hyderabad,Erragadda,waterlogging,GHMC Disaster Management – Erragadda,040-2329-4004,disaster.erragadda@ghmc.gov.in
+Hyderabad,Erragadda,streetlight_or_electricity,GHMC Electrical Wing – Erragadda,040-2329-4005,power.erragadda@ghmc.gov.in
+Hyderabad,Erragadda,others,GHMC General Grievance – Erragadda,040-2329-4006,grievance.erragadda@ghmc.gov.in
+Hyderabad,Balanagar,pothole_road_damage,GHMC Roads & Buildings – Balanagar,040-2329-5001,roads.balanagar@ghmc.gov.in
+Hyderabad,Balanagar,garbage,GHMC Sanitation – Balanagar,040-2329-5002,sanitation.balanagar@ghmc.gov.in
+Hyderabad,Balanagar,sewage_overflow,GHMC Sewerage – Balanagar,040-2329-5003,sewer.balanagar@ghmc.gov.in
+Hyderabad,Balanagar,waterlogging,GHMC Disaster Management – Balanagar,040-2329-5004,disaster.balanagar@ghmc.gov.in
+Hyderabad,Balanagar,streetlight_or_electricity,GHMC Electrical Wing – Balanagar,040-2329-5005,power.balanagar@ghmc.gov.in
+Hyderabad,Balanagar,others,GHMC General Grievance – Balanagar,040-2329-5006,grievance.balanagar@ghmc.gov.in
+Hyderabad,Attapur,pothole_road_damage,GHMC Roads & Buildings – Attapur,040-2329-6001,roads.attapur@ghmc.gov.in
+Hyderabad,Attapur,garbage,GHMC Sanitation – Attapur,040-2329-6002,sanitation.attapur@ghmc.gov.in
+Hyderabad,Attapur,sewage_overflow,GHMC Sewerage – Attapur,040-2329-6003,sewer.attapur@ghmc.gov.in
+Hyderabad,Attapur,waterlogging,GHMC Disaster Management – Attapur,040-2329-6004,disaster.attapur@ghmc.gov.in
+Hyderabad,Attapur,streetlight_or_electricity,GHMC Electrical Wing – Attapur,040-2329-6005,power.attapur@ghmc.gov.in
+Hyderabad,Attapur,others,GHMC General Grievance – Attapur,040-2329-6006,grievance.attapur@ghmc.gov.in
+Hyderabad,Rajendranagar,pothole_road_damage,GHMC Roads & Buildings – Rajendranagar,040-2329-7001,roads.rajendranagar@ghmc.gov.in
+Hyderabad,Rajendranagar,garbage,GHMC Sanitation – Rajendranagar,040-2329-7002,sanitation.rajendranagar@ghmc.gov.in
+Hyderabad,Rajendranagar,sewage_overflow,GHMC Sewerage – Rajendranagar,040-2329-7003,sewer.rajendranagar@ghmc.gov.in
+Hyderabad,Rajendranagar,waterlogging,GHMC Disaster Management – Rajendranagar,040-2329-7004,disaster.rajendranagar@ghmc.gov.in
+Hyderabad,Rajendranagar,streetlight_or_electricity,GHMC Electrical Wing – Rajendranagar,040-2329-7005,power.rajendranagar@ghmc.gov.in
+Hyderabad,Rajendranagar,others,GHMC General Grievance – Rajendranagar,040-2329-7006,grievance.rajendranagar@ghmc.gov.in
+Hyderabad,Hayathnagar,pothole_road_damage,GHMC Roads & Buildings – Hayathnagar,040-2329-8001,roads.hayathnagar@ghmc.gov.in
+Hyderabad,Hayathnagar,garbage,GHMC Sanitation – Hayathnagar,040-2329-8002,sanitation.hayathnagar@ghmc.gov.in
+Hyderabad,Hayathnagar,sewage_overflow,GHMC Sewerage – Hayathnagar,040-2329-8003,sewer.hayathnagar@ghmc.gov.in
+Hyderabad,Hayathnagar,waterlogging,GHMC Disaster Management – Hayathnagar,040-2329-8004,disaster.hayathnagar@ghmc.gov.in
+Hyderabad,Hayathnagar,streetlight_or_electricity,GHMC Electrical Wing – Hayathnagar,040-2329-8005,power.hayathnagar@ghmc.gov.in
+Hyderabad,Hayathnagar,others,GHMC General Grievance – Hayathnagar,040-2329-8006,grievance.hayathnagar@ghmc.gov.in
+Hyderabad,Amberpet,pothole_road_damage,GHMC Roads & Buildings – Amberpet,040-2329-9001,roads.amberpet@ghmc.gov.in
+Hyderabad,Amberpet,garbage,GHMC Sanitation – Amberpet,040-2329-9002,sanitation.amberpet@ghmc.gov.in
+Hyderabad,Amberpet,sewage_overflow,GHMC Sewerage – Amberpet,040-2329-9003,sewer.amberpet@ghmc.gov.in
+Hyderabad,Amberpet,waterlogging,GHMC Disaster Management – Amberpet,040-2329-9004,disaster.amberpet@ghmc.gov.in
+Hyderabad,Amberpet,streetlight_or_electricity,GHMC Electrical Wing – Amberpet,040-2329-9005,power.amberpet@ghmc.gov.in
+Hyderabad,Amberpet,others,GHMC General Grievance – Amberpet,040-2329-9006,grievance.amberpet@ghmc.gov.in
+Hyderabad,Ramanthapur,pothole_road_damage,GHMC Roads & Buildings – Ramanthapur,040-2330-0001,roads.ramanthapur@ghmc.gov.in
+Hyderabad,Ramanthapur,garbage,GHMC Sanitation – Ramanthapur,040-2330-0002,sanitation.ramanthapur@ghmc.gov.in
+Hyderabad,Ramanthapur,sewage_overflow,GHMC Sewerage – Ramanthapur,040-2330-0003,sewer.ramanthapur@ghmc.gov.in
+Hyderabad,Ramanthapur,waterlogging,GHMC Disaster Management – Ramanthapur,040-2330-0004,disaster.ramanthapur@ghmc.gov.in
+Hyderabad,Ramanthapur,streetlight_or_electricity,GHMC Electrical Wing – Ramanthapur,040-2330-0005,power.ramanthapur@ghmc.gov.in
+Hyderabad,Ramanthapur,others,GHMC General Grievance – Ramanthapur,040-2330-0006,grievance.ramanthapur@ghmc.gov.in
+Hyderabad,Champapet,pothole_road_damage,GHMC Roads & Buildings – Champapet,040-2330-1001,roads.champapet@ghmc.gov.in
+Hyderabad,Champapet,garbage,GHMC Sanitation – Champapet,040-2330-1002,sanitation.champapet@ghmc.gov.in
+Hyderabad,Champapet,sewage_overflow,GHMC Sewerage – Champapet,040-2330-1003,sewer.champapet@ghmc.gov.in
+Hyderabad,Champapet,waterlogging,GHMC Disaster Management – Champapet,040-2330-1004,disaster.champapet@ghmc.gov.in
+Hyderabad,Champapet,streetlight_or_electricity,GHMC Electrical Wing – Champapet,040-2330-1005,power.champapet@ghmc.gov.in
+Hyderabad,Champapet,others,GHMC General Grievance – Champapet,040-2330-1006,grievance.champapet@ghmc.gov.in
+Hyderabad,Lakdikapul,pothole_road_damage,GHMC Roads & Buildings – Lakdikapul,040-2330-2001,roads.lakdikapul@ghmc.gov.in
+Hyderabad,Lakdikapul,garbage,GHMC Sanitation – Lakdikapul,040-2330-2002,sanitation.lakdikapul@ghmc.gov.in
+Hyderabad,Lakdikapul,sewage_overflow,GHMC Sewerage – Lakdikapul,040-2330-2003,sewer.lakdikapul@ghmc.gov.in
+Hyderabad,Lakdikapul,waterlogging,GHMC Disaster Management – Lakdikapul,040-2330-2004,disaster.lakdikapul@ghmc.gov.in
+Hyderabad,Lakdikapul,streetlight_or_electricity,GHMC Electrical Wing – Lakdikapul,040-2330-2005,power.lakdikapul@ghmc.gov.in
+Hyderabad,Lakdikapul,others,GHMC General Grievance – Lakdikapul,040-2330-2006,grievance.lakdikapul@ghmc.gov.in
+Hyderabad,Chintal,pothole_road_damage,GHMC Roads & Buildings – Chintal,040-2330-3001,roads.chintal@ghmc.gov.in
+Hyderabad,Chintal,garbage,GHMC Sanitation – Chintal,040-2330-3002,sanitation.chintal@ghmc.gov.in
+Hyderabad,Chintal,sewage_overflow,GHMC Sewerage – Chintal,040-2330-3003,sewer.chintal@ghmc.gov.in
+Hyderabad,Chintal,waterlogging,GHMC Disaster Management – Chintal,040-2330-3004,disaster.chintal@ghmc.gov.in
+Hyderabad,Chintal,streetlight_or_electricity,GHMC Electrical Wing – Chintal,040-2330-3005,power.chintal@ghmc.gov.in
+Hyderabad,Chintal,others,GHMC General Grievance – Chintal,040-2330-3006,grievance.chintal@ghmc.gov.in
+Hyderabad,Jeedimetla,pothole_road_damage,GHMC Roads & Buildings – Jeedimetla,040-2330-4001,roads.jeedimetla@ghmc.gov.in
+Hyderabad,Jeedimetla,garbage,GHMC Sanitation – Jeedimetla,040-2330-4002,sanitation.jeedimetla@ghmc.gov.in
+Hyderabad,Jeedimetla,sewage_overflow,GHMC Sewerage – Jeedimetla,040-2330-4003,sewer.jeedimetla@ghmc.gov.in
+Hyderabad,Jeedimetla,waterlogging,GHMC Disaster Management – Jeedimetla,040-2330-4004,disaster.jeedimetla@ghmc.gov.in
+Hyderabad,Jeedimetla,streetlight_or_electricity,GHMC Electrical Wing – Jeedimetla,040-2330-4005,power.jeedimetla@ghmc.gov.in
+Hyderabad,Jeedimetla,others,GHMC General Grievance – Jeedimetla,040-2330-4006,grievance.jeedimetla@ghmc.gov.in
+Hyderabad,Quthbullapur,pothole_road_damage,GHMC Roads & Buildings – Quthbullapur,040-2330-5001,roads.quthbullapur@ghmc.gov.in
+Hyderabad,Quthbullapur,garbage,GHMC Sanitation – Quthbullapur,040-2330-5002,sanitation.quthbullapur@ghmc.gov.in
+Hyderabad,Quthbullapur,sewage_overflow,GHMC Sewerage – Quthbullapur,040-2330-5003,sewer.quthbullapur@ghmc.gov.in
+Hyderabad,Quthbullapur,waterlogging,GHMC Disaster Management – Quthbullapur,040-2330-5004,disaster.quthbullapur@ghmc.gov.in
+Hyderabad,Quthbullapur,streetlight_or_electricity,GHMC Electrical Wing – Quthbullapur,040-2330-5005,power.quthbullapur@ghmc.gov.in
+Hyderabad,Quthbullapur,others,GHMC General Grievance – Quthbullapur,040-2330-5006,grievance.quthbullapur@ghmc.gov.in

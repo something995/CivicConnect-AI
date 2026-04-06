@@ -1,0 +1,55 @@
+issue_type,title,citizen_steps,authority_steps
+pothole_road_damage,Pothole / Road Damage,"1. Take a clear photo of the pothole from different angles.
+2. Note the exact location (landmark, street, nearby building).
+3. Avoid standing in the middle of traffic while capturing photos.
+4. Submit a complaint with details, including how long the issue exists.
+5. Share the complaint ID and follow up if not resolved in a few days.","1. Log the complaint with unique ticket ID.
+2. Inspect site and estimate repair material and manpower.
+3. Schedule road cutting, base filling and asphalt laying.
+4. Barricade and display work‑in‑progress signboards.
+5. Update complaint status once work is completed."
+garbage,Garbage / Solid Waste,"1. Take photos showing uncollected garbage or overflowing bins.
+2. Separate your own household waste into dry and wet to reduce load.
+3. Lodge a complaint with date, time and frequency of the problem.
+4. Avoid burning waste; it causes pollution and health problems.
+5. Encourage neighbours to store waste in bags for easy collection.","1. Assign nearest sanitation worker / vehicle to the location.
+2. Clear accumulated garbage and disinfect the area.
+3. Check regular collection schedule and optimise route.
+4. Educate local residents on proper disposal points.
+5. Monitor the area for repeated non‑collection complaints."
+sewage_overflow,Sewage Overflow / Drain Block,"1. Avoid contact with the sewage water to prevent infection.
+2. Capture photos or a short video showing the overflow.
+3. Report foul smell, duration and whether it entered homes/shops.
+4. Keep children away from the affected area.
+5. If water is entering your house, move valuables to higher places.","1. Send field staff to clear blockages and open manholes safely.
+2. Use jetting/sucking machines if required.
+3. Disinfect streets after clearing sewage.
+4. Inspect pipelines for structural damage.
+5. Record root cause (clogging, broken pipe, illegal connection) and plan prevention."
+waterlogging,Waterlogging / Flooding,"1. Stay away from open manholes and electric poles in flooded areas.
+2. If water enters your home, switch off main power if it is safe to do so.
+3. Take photos of water level and note how long it remains.
+4. File a complaint clearly mentioning nearest junction and colony name.
+5. Avoid driving two‑wheelers through deep water.","1. Deploy dewatering pumps at low‑lying points.
+2. Clear blocked stormwater drains and inlets.
+3. Coordinate with traffic police for diversions.
+4. Plan long‑term measures like new drains or road re‑grading.
+5. Communicate expected resolution time to citizens."
+streetlight_or_electricity,Streetlight / Electricity Issue,"1. Note the exact pole number or closest house/shop number.
+2. Observe whether the light flickers, stays off, or is broken.
+3. Avoid touching poles, cables or junction boxes.
+4. File complaint mentioning time when lights should normally be ON.
+5. For major sparks/fire, call emergency helpline immediately.","1. Register complaint and mark location on maintenance map.
+2. Send technician to check bulb, driver, wiring and timers.
+3. Replace faulty components and ensure power is safely restored.
+4. Record repeated failure cases for infrastructure upgrade.
+5. Update resolution time and closure notes in the system."
+others,Other Civic Issue,"1. Describe the problem as clearly as possible with photos.
+2. Mention impact on safety, health or movement.
+3. Provide nearest landmark and typical time when problem occurs.
+4. Keep complaint ID safe for future reference.
+5. In emergencies, contact local police or disaster helpline directly.","1. Triage complaint and route to correct department.
+2. Communicate expected timeline to the citizen.
+3. If outside current scope, escalate to higher authority.
+4. Coordinate between departments if multiple services are affected.
+5. Document issue type to improve future routing and planning."

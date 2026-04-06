@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Field Inspections Dashboard — GHMC CivicConnect AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* ── Admin Navbar ─────────────────────────────── */
+        .inspect-dash-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 30px;
+            background: rgba(10, 10, 20, 0.95);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .inspect-dash-nav .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .inspect-dash-nav .nav-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(6, 182, 212, 0.12);
+            color: #06b6d4;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .inspect-dash-nav h2 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .inspect-dash-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        /* ── Stats ────────────────────────────────────── */
+        .inspect-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 24px 30px;
+        }
+
+        .ins-stat-card {
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            text-align: center;
+        }
+
+        .ins-stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .ins-stat-card .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ins-total .stat-number { color: #818cf8; }
+        .ins-identified .stat-number { color: #f59e0b; }
+        .ins-progress .stat-number { color: #3b82f6; }
+        .ins-resolved .stat-number { color: #22c55e; }
+
+        /* ── Layout Grid ────────────────────────────── */
+        .inspect-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 0 30px 30px;
+        }
+
+        .inspect-content.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        /* ── Map ─────────────────────────────────────── */
+        .inspect-map-section {
+            grid-column: 1 / -1;
+        }
+
+        .inspect-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .inspect-map-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        #inspectionMap {
+            height: 420px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-glass);
+            z-index: 1;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        /* ── Hotspot & Type Cards ────────────────────── */
+        .panel-card {
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+        }
+
+        .panel-card h3 {
+            margin-top: 0;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .hotspot-list, .type-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hotspot-list li, .type-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.88rem;
+        }
+
+        .hotspot-list li:last-child, .type-list li:last-child {
+            border-bottom: none;
+        }
+
+        .hotspot-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+
+        .hotspot-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .hotspot-bar-fill {
+            height: 100%;
+            border-radius: 100px;
+            background: var(--gradient-primary);
+        }
+
+        .type-count {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+        }
+
+        /* ── Table ────────────────────────────────────── */
+        .inspect-table-section {
+            grid-column: 1 / -1;
+        }
+
+        .inspect-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .inspect-table th {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .inspect-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+        }
+
+        .inspect-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .severity-dot-sm {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-sm {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-sm.identified {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .status-sm.in_progress {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .status-sm.resolved {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+
+        .action-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+        }
+
+        .action-btn.resolve-btn {
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .img-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border-glass);
+        }
+
+        /* ── Filters ─────────────────────────────────── */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .filter-bar select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-family: inherit;
+        }
+
+        @media (max-width: 900px) {
+            .inspect-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .inspect-content {
+                grid-template-columns: 1fr;
+            }
+            .inspect-dash-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- ═══ Navbar ═══ -->
+    <nav class="inspect-dash-nav">
+        <div class="nav-left">
+            <span class="nav-badge">📊 Inspections</span>
+            <h2>Field <span style="color: #06b6d4;">Inspection Dashboard</span></h2>
+        </div>
+        <div class="nav-actions">
+            <span style="color: var(--text-muted);">{{ user.full_name }}</span>
+            <a href="{{ url_for('admin_inspect') }}" class="btn btn-primary"
+                style="font-size: 0.75rem; padding: 6px 14px;">📸 New Inspection</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px;">🏛️ Command Center</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px;">Logout</a>
+        </div>
+    </nav>
+
+    <!-- ═══ Stats ═══ -->
+    <div class="inspect-stats">
+        <div class="ins-stat-card ins-total">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total Inspections</div>
+        </div>
+        <div class="ins-stat-card ins-identified">
+            <div class="stat-number">{{ stats.identified }}</div>
+            <div class="stat-label">Identified</div>
+        </div>
+        <div class="ins-stat-card ins-progress">
+            <div class="stat-number">{{ stats.in_progress }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="ins-stat-card ins-resolved">
+            <div class="stat-number">{{ stats.resolved }}</div>
+            <div class="stat-label">Resolved</div>
+        </div>
+    </div>
+
+    <!-- ═══ Content Grid ═══ -->
+    <div class="inspect-content">
+
+        <!-- Map Section -->
+        <div class="inspect-map-section">
+            <div class="glass-card" style="padding: 24px;">
+                <div class="inspect-map-header">
+                    <h3>📍 Inspection Locations — Hyderabad</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="mapFilterSeverity">
+                            <option value="all">All Severities</option>
+                            <option value="critical">🔴 Critical</option>
+                            <option value="high">🟠 High</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="low">🟢 Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="inspectionMap"></div>
+                <div class="map-legend">
+                    <span><span class="legend-dot" style="background:#ef4444;"></span> Critical</span>
+                    <span><span class="legend-dot" style="background:#f59e0b;"></span> High</span>
+                    <span><span class="legend-dot" style="background:#3b82f6;"></span> Medium</span>
+                    <span><span class="legend-dot" style="background:#10b981;"></span> Low</span>
+                    <span style="margin-left:auto; font-style:italic;">Marker size = severity score</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Problem Hotspots -->
+        <div class="panel-card">
+            <h3>🔥 Problem Hotspots</h3>
+            {% if stats.by_area %}
+            <ul class="hotspot-list">
+                {% for a in stats.by_area[:8] %}
+                <li>
+                    <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        📍 {{ a.address[:40] }}{% if a.address|length > 40 %}...{% endif %}
+                    </span>
+                    <span class="hotspot-score">
+                        <span class="hotspot-bar">
+                            <span class="hotspot-bar-fill"
+                                style="width: {{ (a.avg_score / 100 * 100)|int }}%;"></span>
+                        </span>
+                        {{ a.count }} issues ({{ a.avg_score|round(0)|int }}/100)
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p style="color: var(--text-muted); font-size: 0.85rem;">No inspections logged yet. Start patrolling!</p>
+            {% endif %}
+        </div>
+
+        <!-- Issue Type Breakdown -->
+        <div class="panel-card">
+            <h3>📊 Issue Types Found</h3>
+            {% if stats.by_type %}
+            <ul class="type-list">
+                {% for t in stats.by_type %}
+                <li>
+                    <span>{{ display_labels.get(t.issue_type, t.issue_type) }}</span>
+                    <span class="type-count">{{ t.count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p style="color: var(--text-muted); font-size: 0.85rem;">No data yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Inspections Table -->
+        <div class="inspect-table-section">
+            <div class="glass-card" style="padding: 24px; overflow-x: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0;">🔍 All Inspections ({{ stats.total }})</h3>
+                    <div class="filter-bar" style="margin-bottom: 0;">
+                        <select id="tableFilterSeverity" onchange="filterTable()">
+                            <option value="all">All Severities</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <select id="tableFilterStatus" onchange="filterTable()">
+                            <option value="all">All Statuses</option>
+                            <option value="identified">Identified</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="inspect-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Photo</th>
+                            <th>Issue</th>
+                            <th>Severity</th>
+                            <th>Score</th>
+                            <th>Location</th>
+                            <th>Inspector</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inspectionsBody">
+                        {% for ins in stats.recent %}
+                        <tr data-severity="{{ ins.severity }}" data-status="{{ ins.status }}">
+                            <td><strong>{{ ins.id }}</strong></td>
+                            <td>
+                                {% if ins.image_url %}
+                                <img src="{{ ins.image_url }}" class="img-thumb" alt="Inspection">
+                                {% else %}
+                                <span style="color: var(--text-muted);">—</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ display_labels.get(ins.issue_type, ins.issue_type) }}</td>
+                            <td>
+                                <span class="severity-dot-sm"
+                                    style="background: {{ severity_colors.get(ins.severity, '#3b82f6') }};"></span>
+                                {{ ins.severity | upper }}
+                            </td>
+                            <td>{{ ins.severity_score }}/100</td>
+                            <td style="max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {% if ins.address %}{{ ins.address[:30] }}{% elif ins.latitude %}{{ "%.4f"|format(ins.latitude) }}, {{ "%.4f"|format(ins.longitude) }}{% else %}—{% endif %}
+                            </td>
+                            <td>{{ ins.inspector_name }}</td>
+                            <td><span class="status-sm {{ ins.status }}">{{ ins.status | replace('_', ' ') }}</span></td>
+                            <td>{{ ins.created_at[:10] }}</td>
+                            <td>
+                                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                    {% if ins.status == 'identified' %}
+                                    <form method="post" action="{{ url_for('admin_inspection_update', inspection_id=ins.id) }}" style="display:inline;">
+                                        <input type="hidden" name="status" value="in_progress">
+                                        <button type="submit" class="action-btn">🔧 Start</button>
+                                    </form>
+                                    {% endif %}
+                                    {% if ins.status != 'resolved' %}
+                                    <form method="post" action="{{ url_for('admin_inspection_update', inspection_id=ins.id) }}" style="display:inline;">
+                                        <input type="hidden" name="status" value="resolved">
+                                        <button type="submit" class="action-btn resolve-btn">✅ Resolve</button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ── Map ──────────────────────────────────────
+        const map = L.map('inspectionMap').setView([17.385, 78.4867], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        const SEVERITY_COLORS = {
+            critical: '#ef4444',
+            high: '#f59e0b',
+            medium: '#3b82f6',
+            low: '#10b981',
+        };
+
+        let allInspections = [];
+        let markers = [];
+
+        function clearMarkers() {
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+        }
+
+        function renderMarkers(data) {
+            clearMarkers();
+            const validData = data.filter(d => d.latitude && d.longitude);
+            validData.forEach(ins => {
+                const color = SEVERITY_COLORS[ins.severity] || '#3b82f6';
+                const radius = Math.max(6, (ins.severity_score / 100) * 16);
+                const marker = L.circleMarker([ins.latitude, ins.longitude], {
+                    radius: radius,
+                    fillColor: color,
+                    color: color,
+                    weight: 1,
+                    opacity: 0.8,
+                    fillOpacity: 0.5,
+                }).addTo(map);
+
+                marker.bindPopup(`
+                    <div style="font-family: system-ui; min-width: 220px;">
+                        <strong>${ins.id}</strong><br>
+                        <span style="color: ${color}; font-weight: 700;">${ins.severity.toUpperCase()}</span>
+                        — Score: ${ins.severity_score}/100<br>
+                        🛠️ ${ins.display_label}<br>
+                        📍 ${ins.address || 'GPS location'}<br>
+                        👷 ${ins.inspector_name}<br>
+                        📊 Status: <strong>${ins.status.replace('_', ' ').toUpperCase()}</strong><br>
+                        🕐 ${ins.created_at.substring(0, 10)}
+                        ${ins.image_url ? `<br><img src="${ins.image_url}" style="width:100%;max-height:120px;object-fit:cover;border-radius:6px;margin-top:6px;">` : ''}
+                        ${ins.notes ? `<br><em style="color:#94a3b8;font-size:0.8rem;">"${ins.notes}"</em>` : ''}
+                    </div>
+                `);
+                markers.push(marker);
+            });
+
+            // Fit bounds if we have data
+            if (validData.length > 0) {
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        function applyMapFilter() {
+            const severity = document.getElementById('mapFilterSeverity').value;
+            let filtered = allInspections;
+            if (severity !== 'all') filtered = filtered.filter(d => d.severity === severity);
+            renderMarkers(filtered);
+        }
+
+        fetch('/api/admin/inspections')
+            .then(r => r.json())
+            .then(data => {
+                allInspections = data;
+                renderMarkers(data);
+            })
+            .catch(err => console.error('Failed to load inspections:', err));
+
+        document.getElementById('mapFilterSeverity').addEventListener('change', applyMapFilter);
+
+        // ── Table Filter ─────────────────────────────
+        function filterTable() {
+            const severity = document.getElementById('tableFilterSeverity').value;
+            const status = document.getElementById('tableFilterStatus').value;
+            const rows = document.querySelectorAll('#inspectionsBody tr');
+            rows.forEach(row => {
+                const matchSev = severity === 'all' || row.dataset.severity === severity;
+                const matchStat = status === 'all' || row.dataset.status === status;
+                row.style.display = (matchSev && matchStat) ? '' : 'none';
+            });
+        }
+
+        // ── Flash messages ───────────────────────────
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+    </script>
+</body>
+
+</html>

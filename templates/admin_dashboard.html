@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GHMC Command Center — CivicConnect AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* ── Admin Navbar ─────────────────────────────── */
+        .admin-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 30px;
+            background: rgba(10, 10, 20, 0.95);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-brand-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .admin-brand h2 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.85rem;
+        }
+
+        .admin-user-info .role-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-supervisor {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .role-field_worker {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+        }
+
+        /* ── Stats Cards ──────────────────────────────── */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            padding: 24px 30px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-total .stat-number {
+            color: #818cf8;
+        }
+
+        .stat-pending .stat-number {
+            color: #f59e0b;
+        }
+
+        .stat-progress .stat-number {
+            color: #3b82f6;
+        }
+
+        .stat-resolved .stat-number {
+            color: #22c55e;
+        }
+
+        .stat-overdue .stat-number {
+            color: #ef4444;
+        }
+
+        /* ── Map ──────────────────────────────────────── */
+        .map-section {
+            padding: 0 30px 24px;
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .map-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .map-filters {
+            display: flex;
+            gap: 8px;
+        }
+
+        .map-filters select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+        }
+
+        #heatmap {
+            height: 450px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-glass);
+            z-index: 1;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        /* ── Complaints Table ─────────────────────────── */
+        .complaints-section {
+            padding: 0 30px 30px;
+        }
+
+        .complaints-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .complaints-table th {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .complaints-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+        }
+
+        .complaints-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .severity-dot-sm {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-sm {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-sm.submitted {
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+        }
+
+        .status-sm.forwarded {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .status-sm.in_progress {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .status-sm.acknowledged {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+        }
+
+        .status-sm.resolved {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+
+        .status-sm.no_response {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+        }
+
+        .action-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+        }
+
+        .action-btn.resolve {
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            max-width: 450px;
+            width: 90%;
+            padding: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- ═══ Admin Navbar ═══ -->
+    <nav class="admin-nav">
+        <div class="admin-brand">
+            <span class="admin-brand-badge">🏛️ GHMC</span>
+            <h2>Civic <span style="color: #818cf8;">Command Center</span></h2>
+        </div>
+        <div class="admin-user-info">
+            <span>{{ user.full_name }}</span>
+            <span class="role-badge role-{{ user.role }}">{{ user.role | replace('_', ' ') }}</span>
+            {% if user.zone %}
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Zone: {{ user.zone }}</span>
+            {% endif %}
+            <a href="{{ url_for('admin_inspect') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px; border-color: rgba(6, 182, 212, 0.3); color: #06b6d4;">📸 Field Inspect</a>
+            <a href="{{ url_for('admin_inspections') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px; border-color: rgba(6, 182, 212, 0.3); color: #06b6d4;">📊 Inspections</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-secondary"
+                style="font-size: 0.75rem; padding: 5px 12px;">Logout</a>
+        </div>
+    </nav>
+
+    <!-- ═══ Stats Overview ═══ -->
+    <div class="admin-stats">
+        <div class="stat-card stat-total">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total Reports</div>
+        </div>
+        <div class="stat-card stat-pending">
+            <div class="stat-number">{{ stats.pending }}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card stat-progress">
+            <div class="stat-number">{{ stats.in_progress }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card stat-resolved">
+            <div class="stat-number">{{ stats.resolved }}</div>
+            <div class="stat-label">Resolved</div>
+        </div>
+        <div class="stat-card stat-overdue">
+            <div class="stat-number">{{ stats.overdue }}</div>
+            <div class="stat-label">Overdue (48h+)</div>
+        </div>
+    </div>
+
+    <!-- ═══ Heatmap ═══ -->
+    <div class="map-section">
+        <div class="map-header">
+            <h3>📍 Complaint Heatmap — Hyderabad</h3>
+            <div class="map-filters">
+                <select id="filterSeverity">
+                    <option value="all">All Severities</option>
+                    <option value="critical">🔴 Critical</option>
+                    <option value="high">🟠 High</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="low">🟢 Low</option>
+                </select>
+                <select id="filterStatus">
+                    <option value="all">All Statuses</option>
+                    <option value="submitted">Submitted</option>
+                    <option value="forwarded">Forwarded</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+            </div>
+        </div>
+        <div id="heatmap"></div>
+        <div class="map-legend">
+            <span><span class="legend-dot" style="background:#ef4444;"></span> Critical</span>
+            <span><span class="legend-dot" style="background:#f59e0b;"></span> High</span>
+            <span><span class="legend-dot" style="background:#3b82f6;"></span> Medium</span>
+            <span><span class="legend-dot" style="background:#10b981;"></span> Low</span>
+            <span style="margin-left:auto; font-style:italic;">Marker size = severity score</span>
+        </div>
+    </div>
+
+    <!-- ═══ Complaints Table ═══ -->
+    <div class="complaints-section">
+        <div class="glass-card" style="padding: 24px; overflow-x: auto;">
+            <h3 style="margin-top: 0;">📋 All Reports ({{ stats.total }})</h3>
+            <table class="complaints-table">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Area</th>
+                        <th>Issue</th>
+                        <th>Severity</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                        <th>Filed</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in stats.recent %}
+                    <tr>
+                        <td><strong>{{ c.id }}</strong></td>
+                        <td>{{ c.area }}</td>
+                        <td>{{ display_labels.get(c.issue_type, c.issue_type) }}</td>
+                        <td>
+                            <span class="severity-dot-sm"
+                                style="background: {{ severity_colors.get(c.severity, '#3b82f6') }};"></span>
+                            {{ c.severity | upper }}
+                        </td>
+                        <td>{{ c.severity_score }}/100</td>
+                        <td><span class="status-sm {{ c.status }}">{{ c.status | replace('_', ' ') }}</span></td>
+                        <td>{{ c.created_at[:10] }}</td>
+                        <td>
+                            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                {% if user.role == 'supervisor' and c.status != 'resolved' %}
+                                <button class="action-btn" onclick="openAssignModal('{{ c.id }}')">👷 Assign</button>
+                                {% endif %}
+                                {% if c.status != 'resolved' %}
+                                <form method="post" action="{{ url_for('admin_update_status', complaint_id=c.id) }}"
+                                    style="display:inline;">
+                                    <input type="hidden" name="status" value="resolved">
+                                    <input type="hidden" name="notes" value="Resolved by field team">
+                                    <button type="submit" class="action-btn resolve">✅ Resolve</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ Assign Modal ═══ -->
+    <div class="modal-overlay" id="assignModal">
+        <div class="glass-card modal-card">
+            <h3 style="margin-top: 0;">👷 Assign to Field Worker</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Report: <strong id="assignReportId"></strong>
+            </p>
+            <form method="post" id="assignForm">
+                <div class="form-group">
+                    <label>Select Worker</label>
+                    <select name="worker_id" required style="width: 100%;">
+                        {% for w in stats.workers %}
+                        <option value="{{ w.id }}">{{ w.full_name }} {% if w.zone %}({{ w.zone }}){% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Assign</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAssignModal()"
+                        style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ── Heatmap ──────────────────────────────────────
+        const map = L.map('heatmap').setView([17.385, 78.4867], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        const SEVERITY_COLORS = {
+            critical: '#ef4444',
+            high: '#f59e0b',
+            medium: '#3b82f6',
+            low: '#10b981',
+        };
+
+        let allComplaints = [];
+        let markers = [];
+
+        function clearMarkers() {
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+        }
+
+        function renderMarkers(data) {
+            clearMarkers();
+            data.forEach(c => {
+                const color = SEVERITY_COLORS[c.severity] || '#3b82f6';
+                const radius = Math.max(6, (c.severity_score / 100) * 16);
+                const marker = L.circleMarker([c.lat, c.lng], {
+                    radius: radius,
+                    fillColor: color,
+                    color: color,
+                    weight: 1,
+                    opacity: 0.8,
+                    fillOpacity: 0.5,
+                }).addTo(map);
+
+                marker.bindPopup(`
+                    <div style="font-family: system-ui; min-width: 200px;">
+                        <strong>${c.id}</strong><br>
+                        <span style="color: ${color}; font-weight: 700;">${c.severity.toUpperCase()}</span>
+                        — Score: ${c.severity_score}/100<br>
+                        📍 ${c.area}, ${c.city}<br>
+                        🏢 Ward: ${c.ward} | Zone: ${c.zone}<br>
+                        🛠️ ${c.display_label}<br>
+                        📊 Status: <strong>${c.status.replace('_', ' ').toUpperCase()}</strong><br>
+                        🕐 ${c.created_at.substring(0, 10)}
+                    </div>
+                `);
+                markers.push(marker);
+            });
+        }
+
+        function applyFilters() {
+            const severity = document.getElementById('filterSeverity').value;
+            const status = document.getElementById('filterStatus').value;
+            let filtered = allComplaints;
+            if (severity !== 'all') filtered = filtered.filter(c => c.severity === severity);
+            if (status !== 'all') filtered = filtered.filter(c => c.status === status);
+            renderMarkers(filtered);
+        }
+
+        // Load complaints
+        fetch('/api/admin/complaints')
+            .then(r => r.json())
+            .then(data => {
+                allComplaints = data;
+                renderMarkers(data);
+            })
+            .catch(err => console.error('Failed to load complaints:', err));
+
+        document.getElementById('filterSeverity').addEventListener('change', applyFilters);
+        document.getElementById('filterStatus').addEventListener('change', applyFilters);
+
+        // ── Assign Modal ─────────────────────────────────
+        function openAssignModal(reportId) {
+            document.getElementById('assignReportId').textContent = reportId;
+            document.getElementById('assignForm').action = '/admin/assign/' + reportId;
+            document.getElementById('assignModal').classList.add('active');
+        }
+        function closeAssignModal() {
+            document.getElementById('assignModal').classList.remove('active');
+        }
+
+        // ── Flash messages ───────────────────────────────
+        document.querySelectorAll('.flash-msg').forEach((msg, i) => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000 + i * 500);
+        });
+    </script>
+</body>
+
+</html>
